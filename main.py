@@ -21,7 +21,7 @@ tools = [multiply]
 
 # 3. Initialize Model
 llm = ChatGoogleGenerativeAI(
-    model="gemini-3-pro-preview",
+    model="gemini-flash-latest",
     temperature=0
 )
 
