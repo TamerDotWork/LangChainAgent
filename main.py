@@ -1,5 +1,5 @@
 """
-data_quality_engine.py
+main.py
 
 A generic, object-oriented Data Quality Engine for pandas DataFrames.
 - Scans: missing values, duplicates, invalid values (rules), outliers (IQR + z-score),
