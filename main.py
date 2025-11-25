@@ -1,67 +1,53 @@
 import os
+import pandas as pd
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.agents import tool, AgentExecutor, create_tool_calling_agent
-from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel, Field
-# 1. Import Any for the recursive type hint
-from typing import Any, Dict
-load_dotenv()
+from langchain_experimental.agents import create_pandas_dataframe_agent
 
+# 1. Setup
+load_dotenv()
 if "GOOGLE_API_KEY" not in os.environ:
-    print("Error: GOOGLE_API_KEY not found in .env file.")
+    print("Error: GOOGLE_API_KEY missing.")
     exit(1)
 
-# --- THE ROOT CAUSE FIX ---
-def remove_titles(schema: Dict[str, Any], model: Any) -> None:
-    """
-    Recursively remove the 'title' key from Pydantic V2 JSON Schemas.
-    Google Gemini throws warnings if 'title' is present in tools.
-    """
-    # Remove title from the current level
-    schema.pop("title", None)
-    
-    # Recursively remove titles from properties (args like 'a' and 'b')
-    properties = schema.get("properties", {})
-    for prop in properties.values():
-        prop.pop("title", None)
-        # If you had deeper nesting, you would recurse here, 
-        # but for simple tools, this depth is usually sufficient.
+# 2. Create Dummy Data (So you have something to analyze)
+csv_file = "data.csv"
+ 
 
-class MultiplyArgs(BaseModel):
-    a: int = Field(description="The first integer")
-    b: int = Field(description="The second integer")
+# 3. Load Data
+df = pd.read_csv(csv_file)
 
-    # Apply the recursive cleaner
-    model_config = {
-        "json_schema_extra": remove_titles
-    }
-
-# Apply the strict schema to the tool
-@tool(args_schema=MultiplyArgs)
-def multiply(a: int, b: int) -> int:
-    """Multiplies two integers together."""
-    return a * b
-
-tools = [multiply]
-
-# 3. Initialize Model (Using 1.5-flash-001 for stability)
+# 4. Initialize Model
+# "gemini-flash-latest" points to the latest stable flash version
 llm = ChatGoogleGenerativeAI(
     model="gemini-flash-latest",
     temperature=0
 )
 
-# 4. Create Agent
-prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant. Use the tools provided."),
-    ("human", "{input}"),
-    ("placeholder", "{agent_scratchpad}"),
-])
+# 5. Create Agent
+# allow_dangerous_code=True allows the AI to write Python to solve your math
+agent = create_pandas_dataframe_agent(
+    llm,
+    df,
+    verbose=True,
+    allow_dangerous_code=True
+)
 
-agent = create_tool_calling_agent(llm, tools, prompt)
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+# 6. Run Loop
+if __name__ == "__main__":
+    print(f"📊 Agent ready! Loaded {len(df)} rows from {csv_file}")
+    print("Type 'exit' to quit.\n")
 
-# 5. Run
-print("--- Starting Agent ---")
-response = agent_executor.invoke({"input": "What is 55 multiplied by 10?"})
-print(f"Answer: {response['output']}")
+    while True:
+        try:
+            q = input("Data Analyst: ")
+            if q.lower() in ["exit", "quit"]:
+                break
+            
+            # Run the agent
+            agent.invoke({"input": q})
+            
+        except KeyboardInterrupt:
+            break
+        except Exception as e:
+            print(f"Error: {e}")
