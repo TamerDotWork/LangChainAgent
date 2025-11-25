@@ -4,7 +4,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import tool, AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
-
+# 1. Import Any for the recursive type hint
+from typing import Any, Dict
 load_dotenv()
 
 if "GOOGLE_API_KEY" not in os.environ:
