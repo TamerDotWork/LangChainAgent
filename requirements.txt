@@ -3,3 +3,4 @@ langchain-google-genai==2.0.0
 langchain-experimental
 pandas
 python-dotenv==1.0.1
+tabulate
