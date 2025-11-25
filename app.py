@@ -22,7 +22,7 @@ def score_invalid_mask(series: pd.Series) -> pd.Series:
     s = pd.to_numeric(series, errors="coerce")
     return s.isna() | (s < 0) | (s > 100)
 
-@app.get("/api/")
+@app.get("LangChainAgent/api/")
 def get_data_quality():
     engine = DataQualityEngine(
         df_demo,
