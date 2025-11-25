@@ -25,3 +25,6 @@ pyyaml
 
 uvicorn
 fastapi
+
+ 
+python-multipart>=0.0.6
