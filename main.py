@@ -4,7 +4,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import tool, AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
 
-# 1. Load environment variables from .env file
+
 load_dotenv()
 
 if "GOOGLE_API_KEY" not in os.environ:
