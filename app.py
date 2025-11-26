@@ -9,14 +9,14 @@ from typing import Optional, Dict, Any, List, Callable
 # Flask Imports
 from flask import Flask, render_template, request, jsonify
 
-# Optional Imports
+# Optional: Scipy for Z-Score outliers
 try:
     from scipy.stats import zscore
 except ImportError:
     zscore = None
 
 # ------------------------
-# Data Quality Engine (Unchanged Logic)
+# Data Quality Engine
 # ------------------------
 @dataclass
 class IssueSample:
@@ -39,6 +39,8 @@ class DataQualityEngine:
         self.name = name
         self.sample_size = sample_size
         self.validation_rules = validation_rules or {}
+        
+        # Detect numeric columns (already clean)
         self.numeric_cols = self.df.select_dtypes(include=[np.number]).columns.tolist()
         self.text_cols = self.df.select_dtypes(include=["object", "string"]).columns.tolist()
         self.datetime_cols = self._detect_datetime_columns()
@@ -62,13 +64,14 @@ class DataQualityEngine:
 
     def _sample_rows(self, mask: pd.Series) -> List[Dict[str, Any]]:
         try:
-            # Replace NaN with None for JSON compatibility in samples
+            # Replace NaN with None for JSON compatibility
             rows = self.df.loc[mask].head(self.sample_size).replace({np.nan: None}).to_dict(orient="records")
         except Exception:
             rows = []
         return rows
 
     # --- Scans ---
+
     def scan_missing(self) -> Dict[str, Any]:
         missing_counts = self.df.isna().sum().to_dict()
         total_missing = int(self.df.isna().sum().sum())
@@ -123,12 +126,29 @@ class DataQualityEngine:
         }
 
     def scan_invalid(self) -> Dict[str, Any]:
+        """
+        Checks specific business logic constraints.
+        FIX APPLIED: Ensures comparisons are done on coerced numeric series 
+        to avoid TypeError (str < int).
+        """
         invalid_report = {}
         total_invalid = 0
 
-        # Heuristic checks
+        # 1. Check Age (0 - 120)
         if "Age" in self.df.columns:
-            mask = (pd.to_numeric(self.df["Age"], errors="coerce").isna()) | (self.df["Age"] < 0) | (self.df["Age"] > 120)
+            # Force conversion to numeric first (non-numeric becomes NaN)
+            age_numeric = pd.to_numeric(self.df["Age"], errors="coerce")
+            
+            # Invalid if: It wasn't a number (NaN) OR it is out of range
+            # Note: We must handle NaN carefully. isna() catches the text strings.
+            mask = (age_numeric.isna()) | (age_numeric < 0) | (age_numeric > 120)
+            
+            # If the original column had actual NaNs that shouldn't count as 'Invalid' logic 
+            # (since that's 'Missing' logic), we can refine. 
+            # But usually for 'Age', NaN is considered invalid data availability in this context.
+            # To be strict: Only count as invalid if it was a string that failed conversion, or a number out of range.
+            # However, for simplicity/robustness, we stick to the previous logic:
+            
             count = int(mask.sum())
             if count > 0:
                 invalid_report["Age"] = {
@@ -138,8 +158,10 @@ class DataQualityEngine:
                 }
                 total_invalid += count
 
+        # 2. Check Salary (> 0)
         if "Salary" in self.df.columns:
-            mask = pd.to_numeric(self.df["Salary"], errors="coerce").isna() | (self.df["Salary"] <= 0)
+            sal_numeric = pd.to_numeric(self.df["Salary"], errors="coerce")
+            mask = (sal_numeric.isna()) | (sal_numeric <= 0)
             count = int(mask.sum())
             if count > 0:
                 invalid_report["Salary"] = {
@@ -149,8 +171,8 @@ class DataQualityEngine:
                 }
                 total_invalid += count
 
+        # 3. Check Text Columns for Numeric-Only values (e.g. name="12345")
         for col in self.text_cols:
-            # Check if text column is purely numeric
             mask = self.df[col].astype(str).str.match(r"^\d+$", na=False)
             count = int(mask.sum())
             if count > 0:
@@ -161,7 +183,7 @@ class DataQualityEngine:
                 }
                 total_invalid += count
 
-        # Custom Rules
+        # 4. Custom Rules
         for col, rule_fn in self.validation_rules.items():
             if col not in self.df.columns:
                 continue
@@ -188,6 +210,8 @@ class DataQualityEngine:
 
     def scan_outliers(self, method: str = "iqr", iqr_multiplier: float = 1.5, zscore_threshold: float = 3.0) -> Dict[str, Any]:
         result = {"metric": "outliers", "method": method, "columns": {}}
+        
+        # Only scan columns that were detected as numeric by Pandas
         for col in self.numeric_cols:
             series = self.df[col].dropna().astype(float)
             if series.empty:
@@ -201,15 +225,25 @@ class DataQualityEngine:
                 iqr = q3 - q1
                 lower = q1 - iqr_multiplier * iqr
                 upper = q3 + iqr_multiplier * iqr
-                mask_iqr = (self.df[col] < lower) | (self.df[col] > upper)
-                masks.append(("iqr", mask_iqr, {"lower": float(lower), "upper": float(upper)}))
+                
+                # Compare against the numeric series, not the dataframe column (safer)
+                mask_iqr = (series < lower) | (series > upper)
+                
+                # Realign mask to original dataframe index
+                final_mask = pd.Series(False, index=self.df.index)
+                final_mask.loc[mask_iqr.index] = mask_iqr
+                
+                masks.append(("iqr", final_mask, {"lower": float(lower), "upper": float(upper)}))
             
             # Z-Score
             if method in ("zscore", "both") and zscore is not None:
                 scores = zscore(series)
-                z_mask = pd.Series(False, index=self.df.index)
-                z_mask.loc[series.index] = np.abs(scores) > zscore_threshold
-                masks.append(("zscore", z_mask, {"threshold": zscore_threshold}))
+                z_bools = np.abs(scores) > zscore_threshold
+                
+                final_mask = pd.Series(False, index=self.df.index)
+                final_mask.loc[series.index] = z_bools
+                
+                masks.append(("zscore", final_mask, {"threshold": zscore_threshold}))
 
             # Combine
             combined_mask = pd.Series(False, index=self.df.index)
@@ -347,7 +381,6 @@ class DataQualityEngine:
         return result
 
     def get_clean_json(self, result: Dict[str, Any]) -> Any:
-        """Helper to return a dict safe for Flask's jsonify (converting numpy types)."""
         return json.loads(json.dumps(result, default=self._json_fallback))
 
     @staticmethod
@@ -370,12 +403,10 @@ class DataQualityEngine:
 # ------------------------
 app = Flask(__name__)
 
-# Route for the HTML Frontend
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
-# Route for API Processing
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -388,7 +419,9 @@ def upload_file():
     try:
         # Read file into Pandas
         if file.filename.endswith('.csv'):
-            df = pd.read_csv(file)
+            # Convert to string buffer to avoid seek/read issues with some Flask versions/configs
+            stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+            df = pd.read_csv(stream)
         elif file.filename.endswith('.json'):
             df = pd.read_json(file)
         else:
@@ -398,9 +431,7 @@ def upload_file():
         engine = DataQualityEngine(df, name=file.filename, sample_size=5)
         raw_result = engine.run_all()
         
-        # Clean result for JSON serialization (handles numpy types)
         clean_result = engine.get_clean_json(raw_result)
-        
         return jsonify(clean_result)
 
     except Exception as e:
