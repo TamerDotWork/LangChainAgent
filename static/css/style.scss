@@ -53,6 +53,7 @@ header nav ul li a {
     color: #fff;
     text-decoration: none;
 }
+
 main {
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -68,10 +69,10 @@ h4 {
 }
 
 .actions {
-
+    background: #121212;
     border-radius: 1rem;
     overflow: auto;
-    background:  linear-gradient(90deg, #0B0B0B, #121212);
+    background: url(banner.png);
     border-radius: 1rem;
     display: flex;
     align-items: center;
@@ -105,7 +106,7 @@ nav.right-head ul {
     color: #666666;
 }
 .banner {
-    background: url('banner.png');
+    background: linear-gradient(90deg, #202020, #333333);
     min-height: 480px;
     border-radius: 1rem;
     display: flex;
