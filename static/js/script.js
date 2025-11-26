@@ -5,14 +5,14 @@ $(document).ready(function() {
         formData.append('file', $('#csv-file')[0].files[0]);
 
         $.ajax({
-            url: '/upload',
+            url: '/LangChainAgent/upload',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
-            // success: function() {
-            //     window.location.href = '/dashboard';
-            // }
+            success: function() {
+                window.location.href = '/dashboard';
+            }
         });
     });
 
@@ -22,14 +22,14 @@ $(document).ready(function() {
         formData.append('file', $('#auto-csv-file')[0].files[0]);
 
         $.ajax({
-            url: '/upload',
+            url: '/LangChainAgent/upload',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
-            // success: function() {
-            //     window.location.href = '/dashboard';
-            // }
+            success: function() {
+                window.location.href = '/dashboard';
+            }
         });
     });
 
