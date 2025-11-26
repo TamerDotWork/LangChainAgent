@@ -27,7 +27,7 @@ $(document).ready(function() {
             return xhr;
         },
         success: function() {
-            window.location.href = 'LangChainAgent/dashboard';
+            window.location.href = '/dashboard';
         },
         error: function(xhr, status, error) {
             alert('Upload failed: ' + error);
