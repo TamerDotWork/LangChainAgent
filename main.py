@@ -402,10 +402,7 @@ def score_invalid_mask(series: pd.Series) -> pd.Series:
     return s.isna() | (s < 0) | (s > 100)
 engine_demo = DataQualityEngine(df_demo, name="demo_dataset", validation_rules={"Score": score_invalid_mask}, sample_size=3)
 
-@app.get("/")
-def root():
-    return {"message": "Data Quality API running. Use GET /api or POST /api with CSV/JSON upload."}
-
+ 
 @app.get("/api")
 def get_demo_report():
     return engine_demo.run_all()
