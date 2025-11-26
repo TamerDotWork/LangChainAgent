@@ -157,9 +157,12 @@ div#insights-cards {
 
 .sidebar ul li a {
     color: #fff;
-    text-decoration: none;
+    text-decoration: none;    display: flex;
+    align-items: center;
 }
-
+.sidebar ul li a svg{
+ margin-right: 16px;
+}
 hr {
     border: 0;
     border-top: 1px solid #333333;
@@ -222,20 +225,25 @@ select#file-select {
     padding: 12px 24px;
     color: #fff;
     text-decoration: none;
-    display: inline-block;
+    display:flex;
     line-height: 13px;
     border: none;
     cursor: pointer;
     background-color: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);    align-items: center;
 }
-
+.btn-primary svg{
+margin-right: 16px;
+}
 .btn-primary:hover {
     color: #000;
     background-color: rgba(255, 255, 255, 1);
 }
-
+.btn-primary:hover svg path{
+    fill: #000;
+   
+}
 input[type="file"] {}
 
 .modal {
