@@ -1,20 +1,89 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Quality Engine</title>
-
-    <link rel="stylesheet" href="/LangChainAgent/static/css/style.css">
+    <title>CSV File Upload and Preview</title>
+    <link rel="stylesheet" href="LangChainAgent/static/css/style.css">
 </head>
 <body>
-  
-    <header>
-    <div class="container">
-        
-    </div>
-    </header>
-    
 
+    <div class="container">
+        <header>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="logo"><a href="/"><img src="LangChainAgent/static/logo.svg" alt=""></a></div>
+                </div>
+                <div class="col-md-2">
+                    <nav class="center-head">
+                      
+                        <ul>
+                            <li><button id="toggle-sidebar" >Toggle Menu</button></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-8">
+                    <nav class="right-head">
+                        <ul>
+                            <li><a href="#">Notification</a></li>
+                            <li><a href="#">Settings</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+
+            <div class="row">
+                
+                <div class="col-md-2 sidebar">
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/dashboard">Dashboard</a></li> <!-- New link added -->
+                    </ul>
+                    <hr>
+                    <ul>
+                        <li><a href="/">Help</a></li>
+                    </ul>
+                    <p class="copyrights">© 2025 Iceberg. All rights reserved.</p>
+                </div>
+                <div class="col-md-10">
+                        <h2>Clear, engaging and interactive</h2>
+                        <div class="banner">
+                    
+                            <div class="cta">
+                                <h1>Data Cleaning & Analysis Tool</h1>
+                                <button id="open-upload-modal" class="btn-primary">Upload CSV</button>
+                            </div>
+                            </div>
+                    <footer>
+                      
+                    </footer>
+
+                </div>
+            </div>
+            
+        </main>
+     
+    </div>
+
+    <form id="auto-upload-form" style="display: none;" enctype="multipart/form-data">
+        <input type="file" id="auto-csv-file" name="file" accept=".csv">
+    </form>
+
+    <script src="LangChainAgent/static/js/jquery-3.6.0.min.js"></script>
+    <script src="LangChainAgent/static/js/script.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#open-upload-modal').on('click', function() {
+                $('#auto-csv-file').click();
+            });
+
+            $('#auto-csv-file').on('change', function() {
+                $('#auto-upload-form').submit();
+            });
+        });
+    </script>
 </body>
 </html>
