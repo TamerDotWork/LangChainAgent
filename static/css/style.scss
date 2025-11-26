@@ -114,9 +114,11 @@ nav.right-head ul {
     padding: 5rem ;
     margin-bottom: 2rem;
     flex-direction: row;
-    background-size: cover;
+    background-size: cover;margin-top: 4rem;
 }
-
+.hero img {
+    margin-top: -2rem;
+}
 ul {
     list-style: none;
     padding: 0;
