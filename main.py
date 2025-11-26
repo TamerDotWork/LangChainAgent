@@ -1,13 +1,3 @@
-"""
-main.py
-
-Generic Data Quality Engine for pandas DataFrames + FastAPI API.
-
-Requirements:
-    pandas, numpy, scipy (optional for zscore), fastapi, uvicorn, python-multipart,
-    langchain-google-genai, langchain-experimental
-"""
-
 from __future__ import annotations
 import json
 from dataclasses import dataclass, field
