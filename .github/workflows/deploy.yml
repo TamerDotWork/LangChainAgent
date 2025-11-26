@@ -22,4 +22,3 @@ jobs:
           cd /var/www/ai.tamer.work/public_html/LangChainAgent
           git pull origin main
           sudo systemctl restart nginx
-
