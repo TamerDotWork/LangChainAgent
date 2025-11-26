@@ -10,9 +10,9 @@ $(document).ready(function() {
             data: formData,
             processData: false,
             contentType: false,
-            success: function() {
-                window.location.href = '/dashboard';
-            }
+            // success: function() {
+            //     window.location.href = '/dashboard';
+            // }
         });
     });
 
@@ -27,9 +27,9 @@ $(document).ready(function() {
             data: formData,
             processData: false,
             contentType: false,
-            success: function() {
-                window.location.href = '/dashboard';
-            }
+            // success: function() {
+            //     window.location.href = '/dashboard';
+            // }
         });
     });
 
