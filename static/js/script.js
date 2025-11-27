@@ -52,10 +52,10 @@ document.getElementById('auto-upload-form').addEventListener('submit', async fun
         
   $(document).ready(function() {
             $('#open-upload-modal').on('click', function() {
-                $('#auto-csv-file').click();
+                $('#ajaxFileInput').click();
             });
 
-            $('#auto-csv-file').on('change', function() {
+            $('#ajaxFileInput').on('change', function() {
                 $('#auto-upload-form').submit();
             });
         });
