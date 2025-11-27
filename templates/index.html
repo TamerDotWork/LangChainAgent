@@ -161,7 +161,7 @@ Config</a></li>
 
             try {
                 // FIX: Use 'upload' (relative) instead of '/upload' (absolute)
-                const response = await fetch('LangChainAgent/upload', {
+                const response = await fetch('upload', {
                     method: 'POST',
                     body: formData
                 });
