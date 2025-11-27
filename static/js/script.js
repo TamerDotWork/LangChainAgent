@@ -1,4 +1,4 @@
-document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+document.getElementById('auto-upload-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const fileInput = document.getElementById('ajaxFileInput');
@@ -50,3 +50,12 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
         });
 
         
+  $(document).ready(function() {
+            $('#open-upload-modal').on('click', function() {
+                $('#auto-csv-file').click();
+            });
+
+            $('#auto-csv-file').on('change', function() {
+                $('#auto-upload-form').submit();
+            });
+        });
