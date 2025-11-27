@@ -49,15 +49,4 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
             }
         });
 
-        function openFileOption() {
-            document.getElementById("ajaxFileInput").click();
-        }
-
-        // Listen for when a file is selected
-        document.getElementById("ajaxFileInput").addEventListener("change", function() {
-            // Check if a file was actually selected
-            if (this.files[0]) {
-                // Submit the form automatically
-                document.getElementById("uploadForm").submit();
-            }
-        });
+        
