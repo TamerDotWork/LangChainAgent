@@ -145,7 +145,7 @@ Config</a></li>
         formData.append('file', $('#csv-file')[0].files[0]);
 
         $.ajax({
-            url: '/upload',
+            url: '/LangChainAgent/upload',
             type: 'POST',
             data: formData,
             processData: false,
@@ -168,7 +168,7 @@ Config</a></li>
             processData: false,
             contentType: false,
             success: function() {
-                window.location.href = '/dashboard';
+                window.location.href = '/LangChainAgent/dashboard';
             }
         });
     });
@@ -182,11 +182,11 @@ Config</a></li>
         }
     });
 
-    if (window.location.pathname === '/dashboard') {
+    if (window.location.pathname === '/LangChainAgent/dashboard') {
         $('#overlay').show(); // Show overlay
         $('#preloader').show(); // Show preloader
         $.ajax({
-            url: '/file-insights',
+            url: '/LangChainAgent/file-insights',
             type: 'POST',
             contentType: 'application/json', // Set content type to application/json
             data: JSON.stringify({ filename: $('#file-select').val() }), // Send data as JSON
