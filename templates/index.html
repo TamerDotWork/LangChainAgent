@@ -135,7 +135,7 @@ Config</a></li>
             });
 
             $('#auto-csv-file').on('change', function() {
-               if(this.files[0]!=null){
+               if(this.files[0]!=null && this.files[0]!=undefined && this.files[0]!=""){
                 $('#auto-upload-form').submit();
                }
             
