@@ -137,24 +137,8 @@ Config</a></li>
                 $('#auto-upload-form').submit();
             });
         });
-
-        $(document).ready(function() {
-    $('#upload-form').on('submit', function(event) {
-        event.preventDefault();
-        var formData = new FormData();
-        formData.append('file', $('#csv-file')[0].files[0]);
-
-        $.ajax({
-            url: '/LangChainAgent/upload',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function() {
-                window.location.href = '/LangChainAgent/dashboard';
-            }
-        });
-    });
+ 
+ 
 
     $('#auto-upload-form').on('submit', async function(e) {
        e.preventDefault();
@@ -207,7 +191,7 @@ Config</a></li>
             }
     });
 
-});
+ 
  
  
     </script>
