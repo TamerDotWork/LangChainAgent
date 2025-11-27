@@ -50,5 +50,5 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
         });
 
         function openFileOption() {
-            document.getElementById("fileInput").click();
+            document.getElementById("ajaxFileInput").click();
         }
