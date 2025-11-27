@@ -134,9 +134,10 @@ Config</a></li>
                 $('#auto-csv-file').click();
             });
 
-     
-     
-  });
+            $('#auto-csv-file').on('change', function() {
+                $('#auto-upload-form').submit();
+            });
+        });
  
 
     $('#auto-upload-form').on('submit', async function(e) {
