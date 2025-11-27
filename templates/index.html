@@ -95,7 +95,9 @@ Config</a></li>
                 <div class="col-md-10">
                         <!-- <h2>Clear, engaging and interactive</h2> -->
                        <div class="banner">
-                    
+                     <form id="auto-upload-form" style="display: none;" enctype="multipart/form-data">
+        <input type="file" id="auto-csv-file" name="file" accept=".csv">
+  
                             <div class="cta">
                                 <h1>Data Cleaning & Analysis Tool</h1>
                                 <button id="open-upload-modal" class="btn-primary"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -104,6 +106,7 @@ Config</a></li>
 <path d="M22 12.75H2C1.59 12.75 1.25 12.41 1.25 12C1.25 11.59 1.59 11.25 2 11.25H22C22.41 11.25 22.75 11.59 22.75 12C22.75 12.41 22.41 12.75 22 12.75Z" fill="white"/>
 </svg>Upload CSV</button>
                             </div>
+                              </form>
                             <div class="hero">
                                 <img src="static/hero.png" alt="" class="img-responsive">
                             </div>
@@ -121,9 +124,7 @@ Config</a></li>
      
     </div>
 
-    <form id="auto-upload-form" style="display: none;" enctype="multipart/form-data">
-        <input type="file" id="auto-csv-file" name="file" accept=".csv">
-    </form>
+   
 
     <script src="static/js/jquery-3.6.0.min.js"></script>
     <!-- <script src="static/js/script.js"></script> -->
