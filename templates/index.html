@@ -148,10 +148,7 @@ Config</a></li>
             const errorDiv = document.getElementById('errorMsg');
             const loader = document.getElementById('loading-overlay');
 
-            if (!fileInput.files[0]) {
-                alert("Please select a file");
-                return;
-            }
+            
 
             loader.style.display = 'block';
             errorDiv.classList.add('d-none');
