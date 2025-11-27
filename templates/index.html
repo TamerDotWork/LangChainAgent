@@ -94,36 +94,23 @@ Config</a></li>
                 </div>
                 <div class="col-md-10">
                         <!-- <h2>Clear, engaging and interactive</h2> -->
-                        <div class="banner">
+                       <div class="banner">
                     
                             <div class="cta">
                                 <h1>Data Cleaning & Analysis Tool</h1>
-                                <form id="auto-upload-form" method="POST" enctype="multipart/form-data">
-                <div class="mb-4">
-                 
-                    <input class="form-control form-control-lg" type="file" id="ajaxFileInput" name="myFile" accept=".csv,.json"    style="display: none;" >
-                </div>
-               
-            
-                                <input type="submit" value="Upload CSV " id="open-upload-modal" class="btn-primary"  ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <button id="open-upload-modal" class="btn-primary"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M22 9.75C21.59 9.75 21.25 9.41 21.25 9V7C21.25 4.42 19.58 2.75 17 2.75H7C4.42 2.75 2.75 4.42 2.75 7V9C2.75 9.41 2.41 9.75 2 9.75C1.59 9.75 1.25 9.41 1.25 9V7C1.25 3.56 3.56 1.25 7 1.25H17C20.44 1.25 22.75 3.56 22.75 7V9C22.75 9.41 22.41 9.75 22 9.75Z" fill="white"/>
 <path d="M17 22.75H7C3.56 22.75 1.25 20.44 1.25 17V15C1.25 14.59 1.59 14.25 2 14.25C2.41 14.25 2.75 14.59 2.75 15V17C2.75 19.58 4.42 21.25 7 21.25H17C19.58 21.25 21.25 19.58 21.25 17V15C21.25 14.59 21.59 14.25 22 14.25C22.41 14.25 22.75 14.59 22.75 15V17C22.75 20.44 20.44 22.75 17 22.75Z" fill="white"/>
 <path d="M22 12.75H2C1.59 12.75 1.25 12.41 1.25 12C1.25 11.59 1.59 11.25 2 11.25H22C22.41 11.25 22.75 11.59 22.75 12C22.75 12.41 22.41 12.75 22 12.75Z" fill="white"/>
-</svg></form>
+</svg>Upload CSV</button>
                             </div>
                             <div class="hero">
                                 <img src="static/hero.png" alt="" class="img-responsive">
                             </div>
                             </div>
                     <footer>
-                           
-
-            <div id="errorMsg" class="alert alert-danger mt-3 d-none"></div>
-
-             <div id="loading-overlay">
-        <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status"></div>
-        <h3 class="mt-3 text-secondary">Analyzing Data...</h3>
-    </div>
+                      <div id="upload-progress" style="display:none; width: 100%; background: #eee; margin-top: 10px;">
+    <div id="progress-bar" style="width:0%; height:5px; background:#4caf50;"></div>
 </div>
                     </footer>
 
@@ -134,10 +121,233 @@ Config</a></li>
      
     </div>
 
- 
+    <form id="auto-upload-form" style="display: none;" enctype="multipart/form-data">
+        <input type="file" id="auto-csv-file" name="file" accept=".csv">
+    </form>
 
     <script src="static/js/jquery-3.6.0.min.js"></script>
-    <script src="static/js/script.js"></script>
- 
+    <!-- <script src="static/js/script.js"></script> -->
+    <script>
+        $(document).ready(function() {
+            $('#open-upload-modal').on('click', function() {
+                $('#auto-csv-file').click();
+            });
+
+            $('#auto-csv-file').on('change', function() {
+                $('#auto-upload-form').submit();
+            });
+        });
+
+        $(document).ready(function() {
+    $('#upload-form').on('submit', function(event) {
+        event.preventDefault();
+        var formData = new FormData();
+        formData.append('file', $('#csv-file')[0].files[0]);
+
+        $.ajax({
+            url: '/upload',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function() {
+                window.location.href = '/dashboard';
+            }
+        });
+    });
+
+    $('#auto-upload-form').on('submit', function(event) {
+        event.preventDefault();
+        var formData = new FormData();
+        formData.append('file', $('#auto-csv-file')[0].files[0]);
+
+        $.ajax({
+            url: '/upload',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function() {
+                window.location.href = '/dashboard';
+            }
+        });
+    });
+
+    // Select last uploaded file
+    $('#load-last-uploaded').on('click', function() {
+        var lastFile = $('#file-select option:last').val();
+        if (lastFile) {
+            $('#file-select').val(lastFile);
+            $('#load-insights').click();
+        }
+    });
+
+    if (window.location.pathname === '/dashboard') {
+        $('#overlay').show(); // Show overlay
+        $('#preloader').show(); // Show preloader
+        $.ajax({
+            url: '/file-insights',
+            type: 'POST',
+            contentType: 'application/json', // Set content type to application/json
+            data: JSON.stringify({ filename: $('#file-select').val() }), // Send data as JSON
+            success: function(data) {
+                $('#overlay').hide(); // Hide overlay
+                $('#preloader').hide(); // Hide preloader
+                displayCSVPreview(data.columns, data.rows);
+                displayFileInsights(data.insights);
+            },
+            error: function() {
+                $('#overlay').hide(); // Hide overlay on error
+                $('#preloader').hide(); // Hide preloader on error
+            }
+        });
+    }
+
+    $('#toggle-sidebar').on('click', function() {
+        $('.sidebar').toggleClass('hidden');
+    });
+
+    $('#load-insights').on('click', function() {
+        var selectedFile = $('#file-select').val();
+        if (selectedFile) {
+            $('#overlay').show(); // Show overlay
+            $('#preloader').show(); // Show preloader
+            $.ajax({
+                url: '/file-insights',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ filename: selectedFile }),
+                success: function(data) {
+                    $('#overlay').hide(); // Hide overlay
+                    $('#preloader').hide(); // Hide preloader
+                    displayCSVPreview(data.columns, data.rows);
+                    displayFileInsights(data.insights);
+                },
+                error: function() {
+                    $('#overlay').hide(); // Hide overlay on error
+                    $('#preloader').hide(); // Hide preloader on error
+                }
+            });
+        }
+    });
+});
+
+function displayCSVPreview(columns, rows) {
+    var thead = $('#csv-preview-header');
+    var tbody = $('#csv-preview-body');
+    
+    thead.empty();
+    tbody.empty();
+    
+    var headerRow = columns.map(col => `<th>${col}</th>`).join('');
+    thead.append(headerRow);
+    
+    rows.forEach(row => {
+        var rowHtml = '<tr>' + row.map(cell => `<td>${cell}</td>`).join('') + '</tr>';
+        tbody.append(rowHtml);
+    });
+}
+
+function displayFileInsights(insights) {
+    // Update summary section
+    const overview = insights.dataset_overview;
+    $('#summary-rows').text(overview.total_rows.toLocaleString());
+    $('#summary-columns').text(overview.total_columns.toLocaleString());
+    $('#summary-missing').text(overview.missing_values_percentage + '%');
+    $('#summary-duplicates').text(overview.duplicate_rows.toLocaleString());
+    
+    // Calculate total outliers percentage
+    const totalOutliers = Object.values(insights.statistical_insights.outliers_per_column)
+        .reduce((sum, count) => sum + count, 0);
+    const outliersPercentage = ((totalOutliers / overview.total_rows) * 100).toFixed(1);
+    $('#summary-outliers').text(outliersPercentage + '%');
+
+    // Rest of the existing display logic
+    var insightsCards = $('#insights-cards');
+    insightsCards.empty();
+    
+    // Dataset Overview
+    const quality = insights.data_quality;
+    insightsCards.append(createCard('Dataset Overview', `
+        <div class="kpi-grid summary-item">
+            <div class="kpi-item value normal">
+                <div class="kpi-number ">${overview.total_rows.toLocaleString()}</div>
+                <div class="kpi-label">Total Rows</div>
+            </div> 
+            <div class="kpi-item value caution">
+                <div class="kpi-number">${overview.total_columns.toLocaleString()}</div>
+                <div class="kpi-label">Total Columns</div>
+            </div>
+            <div class="kpi-item value warning">
+                <div class="kpi-number ${overview.missing_values_percentage > 20 ? 'warning' : ''}">${overview.missing_values_percentage}%</div>
+                <div class="kpi-label">Missing Values</div>
+                <div class="progress-bar">
+                    <div class="fill" style="width: ${Math.min(overview.missing_values_percentage, 100)}%"></div>
+                </div>
+            </div>
+            <div class="kpi-item value success">
+                <div class="caution kpi-number ${overview.duplicate_rows > (overview.total_rows * 0.05) ? 'warning' : ''}">${overview.duplicate_rows.toLocaleString()}</div>
+                <div class="kpi-label caution">Duplicate Rows</div>
+            </div>
+        </div>
+    `));
+    
+    // Missing Values Analysis
+    const missingValuesHtml = quality.columns_with_high_missing_values.map(col => {
+        const missingData = quality.missing_values_by_column[col];
+        return `<div class="missing-value-item">
+            <div class="col-name caution">${col}</div>
+            <div class="missing-stats">
+                <span class="missing-percent ${missingData.percentage > 50 ? 'warning' : ''}">${missingData.percentage}%</span>
+                <div class="progress-bar">
+                    <div class="fill" style="width: ${missingData.percentage}%"></div>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    insightsCards.append(createCard('Columns with High Missing Values', `
+        <div class="missing-values-list">
+            ${missingValuesHtml || '<p>No columns with high missing values</p>'}
+        </div>
+    `));
+    
+    // Data Quality
+    insightsCards.append(createCard('Data Quality', `
+        <strong>Most Frequent Type:</strong> ${quality.most_frequent_data_type}<br>
+        <strong>High Missing Columns:</strong>
+        <ul>${quality.columns_with_high_missing_values.map(col => `<li>${col}</li>`).join('')}</ul>
+    `));
+    
+    // Statistical Insights
+    const stats = insights.statistical_insights;
+    const outliersList = stats.outliers_per_column ? 
+        Object.entries(stats.outliers_per_column)
+            .filter(([_, count]) => count > 0)
+            .map(([col, count]) => `<li>${col}: ${count} outliers</li>`)
+            .join('') : '';
+            
+    insightsCards.append(createCard('Statistical Insights', `
+        <strong>Skewed Columns:</strong> <span class="${stats.skewed_columns_count > 3 ? 'warning' : ''}">${stats.skewed_columns_count}</span><br>
+        <strong>Strong Correlations:</strong> ${stats.correlation_pairs_count || 0} pairs<br>
+        ${outliersList ? `<strong>Outliers Summary:</strong><ul>${outliersList}</ul>` : ''}
+    `));
+}
+
+function createCard(title, content) {
+    return `<div class="card">
+        <h5>${title}</h5>
+        <div class="content">${content}</div>
+    </div>`;
+}
+
+function formatInsightContent(insight) {
+    if (typeof insight === 'object') {
+        return `<ul>${Object.entries(insight).map(([subKey, value]) => `<li><strong>${subKey}:</strong> ${value}</li>`).join('')}</ul>`;
+    } else {
+        return insight;
+    }
+}
+    </script>
 </body>
 </html>
