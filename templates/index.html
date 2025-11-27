@@ -9,21 +9,16 @@
     <style>
         body { background: #f0f2f5; height: 100vh; display: flex; align-items: center; justify-content: center; }
         .upload-card { width: 100%; max-width: 500px; border: none; border-radius: 15px; }
-        .drop-zone { border: 2px dashed #ccc; border-radius: 10px; padding: 40px; text-align: center; background: #fafafa; cursor: pointer; transition: all 0.3s; }
-        .drop-zone:hover { border-color: #0d6efd; background: #f1f8ff; }
         #loading-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.9); z-index: 1000; text-align: center; padding-top: 20%; }
     </style>
 </head>
 <body>
 
-    <!-- Loading Overlay -->
     <div id="loading-overlay">
         <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status"></div>
         <h3 class="mt-3 text-secondary">Analyzing Data...</h3>
-        <p class="text-muted">Calculating outliers, schema, and quality score.</p>
     </div>
 
-    <!-- Upload Card -->
     <div class="card shadow-lg upload-card">
         <div class="card-body p-5">
             <h3 class="card-title text-center mb-4 fw-bold text-primary">Data Quality Engine</h3>
@@ -33,11 +28,8 @@
                     <label class="form-label fw-bold">Upload CSV or JSON</label>
                     <input class="form-control form-control-lg" type="file" id="fileInput" accept=".csv,.json" required>
                 </div>
-
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="bi bi-rocket-takeoff me-2"></i>Run Scan
-                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg">Run Scan</button>
                 </div>
             </form>
 
@@ -46,56 +38,56 @@
     </div>
 
     <script>
-    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const fileInput = document.getElementById('fileInput');
-        const errorDiv = document.getElementById('errorMsg');
-        const loader = document.getElementById('loading-overlay');
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const errorDiv = document.getElementById('errorMsg');
+            const loader = document.getElementById('loading-overlay');
 
-        if (!fileInput.files[0]) {
-            alert("Please select a file");
-            return;
-        }
+            if (!fileInput.files[0]) {
+                alert("Please select a file");
+                return;
+            }
 
-        loader.style.display = 'block';
-        errorDiv.classList.add('d-none');
+            loader.style.display = 'block';
+            errorDiv.classList.add('d-none');
 
-        const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
 
-        try {
-            const response = await fetch('/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            // 1. Read response as text first to debug
-            const responseText = await response.text();
-
-            // 2. Try to parse as JSON
-            let result;
             try {
-                result = JSON.parse(responseText);
+                // FIX: Use 'upload' (relative) instead of '/upload' (absolute)
+                const response = await fetch('upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                // Read text first to catch HTML errors (like 404/500)
+                const responseText = await response.text();
+
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (err) {
+                    console.error("Server HTML Response:", responseText);
+                    throw new Error(`Server returned error (${response.status}). See console.`);
+                }
+
+                if (!response.ok || result.error) {
+                    throw new Error(result.error || "Unknown Server Error");
+                }
+
+                // Success: Save and Redirect
+                sessionStorage.setItem('dqResult', JSON.stringify(result));
+                window.location.href = "dashboard"; // Relative redirect
+
             } catch (err) {
-                // If parsing fails, it's likely an HTML error page from Flask
-                console.error("Server returned HTML instead of JSON:", responseText);
-                throw new Error("Server Error: Check browser console for details (likely 500 or 404).");
+                loader.style.display = 'none';
+                errorDiv.textContent = err.message;
+                errorDiv.classList.remove('d-none');
             }
-
-            if (!response.ok || result.error) {
-                throw new Error(result.error || "Server Error");
-            }
-
-            sessionStorage.setItem('dqResult', JSON.stringify(result));
-            window.location.href = "/dashboard";
-
-        } catch (err) {
-            loader.style.display = 'none';
-            errorDiv.textContent = err.message;
-            errorDiv.classList.remove('d-none');
-        }
-    });
-</script>
+        });
+    </script>
 </body>
 </html>
