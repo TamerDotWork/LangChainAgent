@@ -49,7 +49,6 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
             }
         });
 
- // Trigger the hidden file input when the button is clicked
         function openFileOption() {
             document.getElementById("fileInput").click();
         }
