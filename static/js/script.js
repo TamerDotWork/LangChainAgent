@@ -48,3 +48,4 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
                 errorDiv.classList.remove('d-none');
             }
         });
+
