@@ -95,12 +95,12 @@ Config</a></li>
                 <div class="col-md-10">
                         <!-- <h2>Clear, engaging and interactive</h2> -->
                        <div class="banner">
-                     <form id="auto-upload-form"  enctype="multipart/form-data">
+                     <form id="auto-upload-form" method="POST" enctype="multipart/form-data">
                     <input type="file" id="auto-csv-file" name="file" accept=".csv" style="display: none;">
   
                             <div class="cta">
                                 <h1>Data Cleaning & Analysis Tool</h1>
-                                <button id="open-upload-modal" class="btn-primary"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <button id="open-upload-modal" class="btn-primary"  type="button" ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M22 9.75C21.59 9.75 21.25 9.41 21.25 9V7C21.25 4.42 19.58 2.75 17 2.75H7C4.42 2.75 2.75 4.42 2.75 7V9C2.75 9.41 2.41 9.75 2 9.75C1.59 9.75 1.25 9.41 1.25 9V7C1.25 3.56 3.56 1.25 7 1.25H17C20.44 1.25 22.75 3.56 22.75 7V9C22.75 9.41 22.41 9.75 22 9.75Z" fill="white"/>
 <path d="M17 22.75H7C3.56 22.75 1.25 20.44 1.25 17V15C1.25 14.59 1.59 14.25 2 14.25C2.41 14.25 2.75 14.59 2.75 15V17C2.75 19.58 4.42 21.25 7 21.25H17C19.58 21.25 21.25 19.58 21.25 17V15C21.25 14.59 21.59 14.25 22 14.25C22.41 14.25 22.75 14.59 22.75 15V17C22.75 20.44 20.44 22.75 17 22.75Z" fill="white"/>
 <path d="M22 12.75H2C1.59 12.75 1.25 12.41 1.25 12C1.25 11.59 1.59 11.25 2 11.25H22C22.41 11.25 22.75 11.59 22.75 12C22.75 12.41 22.41 12.75 22 12.75Z" fill="white"/>
@@ -139,53 +139,53 @@ Config</a></li>
   });
  
 
-    // $('#auto-upload-form').on('submit', async function(e) {
-    //    e.preventDefault();
+    $('#auto-upload-form').on('submit', async function(e) {
+       e.preventDefault();
             
-    //         const fileInput = document.getElementById('auto-csv-file');
-    //         const errorDiv = document.getElementById('errorMsg');
-    //         const loader = document.getElementById('loading-overlay');
+            const fileInput = document.getElementById('auto-csv-file');
+            const errorDiv = document.getElementById('errorMsg');
+            const loader = document.getElementById('loading-overlay');
 
             
 
-    //         loader.style.display = 'block';
-    //         errorDiv.classList.add('d-none');
+            loader.style.display = 'block';
+            errorDiv.classList.add('d-none');
 
-    //         const formData = new FormData();
-    //         formData.append('file', fileInput.files[0]);
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
 
-    //         try {
-    //             // FIX: Use 'upload' (relative) instead of '/upload' (absolute)
-    //             const response = await fetch('upload', {
-    //                 method: 'POST',
-    //                 body: formData
-    //             });
+            try {
+                // FIX: Use 'upload' (relative) instead of '/upload' (absolute)
+                const response = await fetch('upload', {
+                    method: 'POST',
+                    body: formData
+                });
 
-    //             // Read text first to catch HTML errors (like 404/500)
-    //             const responseText = await response.text();
+                // Read text first to catch HTML errors (like 404/500)
+                const responseText = await response.text();
 
-    //             let result;
-    //             try {
-    //                 result = JSON.parse(responseText);
-    //             } catch (err) {
-    //                 console.error("Server HTML Response:", responseText);
-    //                 throw new Error(`Server returned error (${response.status}). See console.`);
-    //             }
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (err) {
+                    console.error("Server HTML Response:", responseText);
+                    throw new Error(`Server returned error (${response.status}). See console.`);
+                }
 
-    //             if (!response.ok || result.error) {
-    //                 throw new Error(result.error || "Unknown Server Error");
-    //             }
+                if (!response.ok || result.error) {
+                    throw new Error(result.error || "Unknown Server Error");
+                }
 
-    //             // Success: Save and Redirect
-    //             sessionStorage.setItem('dqResult', JSON.stringify(result));
-    //             window.location.href = "dashboard"; // Relative redirect
+                // Success: Save and Redirect
+                sessionStorage.setItem('dqResult', JSON.stringify(result));
+                window.location.href = "dashboard"; // Relative redirect
 
-    //         } catch (err) {
-    //             loader.style.display = 'none';
-    //             errorDiv.textContent = err.message;
-    //             errorDiv.classList.remove('d-none');
-    //         }
-    // });
+            } catch (err) {
+                loader.style.display = 'none';
+                errorDiv.textContent = err.message;
+                errorDiv.classList.remove('d-none');
+            }
+    });
 
  
    
