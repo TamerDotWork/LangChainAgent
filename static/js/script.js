@@ -1,7 +1,7 @@
 document.getElementById('uploadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const fileInput = document.getElementById('fileInput');
+            const fileInput = document.getElementById('ajaxFileInput');
             const errorDiv = document.getElementById('errorMsg');
             const loader = document.getElementById('loading-overlay');
 
