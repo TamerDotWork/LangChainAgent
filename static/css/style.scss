@@ -235,7 +235,7 @@ select#file-select {
     cursor: pointer;
     background-color: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);    align-items: center;
+    backdrop-filter: blur(10px);    align-items: center;    justify-self: flex-start;
 }
 .btn-primary svg{
 margin-right: 16px;
