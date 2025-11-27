@@ -94,28 +94,8 @@ Config</a></li>
                     <p class="copyrights">© 2025 Iceberg. All rights reserved.</p>
                 </div>
                 <div class="col-md-10">
-                        <!-- <h2>Clear, engaging and interactive</h2> -->
-                        <div class="banner">
-                    
-                            <div class="cta" id="cta">
-                                 <div class="row">
-  <div class="col-md-6"><canvas id="missingValuesChart"></canvas></div>
-  <div class="col-md-6"><canvas id="outliersChart"></canvas></div>
-</div>
-<div class="row">
-  <div class="col-md-6"><canvas id="duplicateChart"></canvas></div>
-  <div class="col-md-6"><canvas id="dtypeChart"></canvas></div>
-</div>
-
-                            </div>
-                           
-                            </div>
-                    <footer>
-                            
-
-            <div id="errorMsg" class="alert alert-danger mt-3 d-none"></div>
-</div>
-                    </footer>
+                      
+                   
 
                 </div>
             </div>
@@ -146,73 +126,12 @@ Config</a></li>
              
             console.log(data);
 
-  // 🧮 Extract needed metrics
-    const missingValues = scans.missing_values;
-    const outliers = scans.outliers;
-    const duplicateCount = scans.duplicates.total;
-    const dtypeCounts = scans.schema.data_types;
 
-    // Convert missing values into chart format
-    const missingKeys = Object.keys(missingValues);
-    const missingVals = Object.values(missingValues);
+ 
 
-    // Outliers
-    const outlierKeys = Object.keys(outliers);
-    const outlierVals = Object.values(outliers);
 
-    // Data types
-    const dtypeKeys = Object.keys(dtypeCounts);
-    const dtypeVals = Object.values(dtypeCounts);
-
-    // 🌟 Missing Values Bar Chart
-    new Chart(document.getElementById('missingValuesChart'), {
-        type: 'bar',
-        data: {
-            labels: missingKeys,
-            datasets: [{
-                label: 'Missing Values',
-                data: missingVals,
-                borderWidth: 1
-            }]
-        }
-    });
-
-    // 🌟 Outliers Bar Chart
-    new Chart(document.getElementById('outliersChart'), {
-        type: 'bar',
-        data: {
-            labels: outlierKeys,
-            datasets: [{
-                label: 'Outliers Count',
-                data: outlierVals,
-                borderWidth: 1
-            }]
-        }
-    });
-
-    // 🌟 Duplicate Pie Chart
-    new Chart(document.getElementById('duplicateChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Duplicates', 'Unique'],
-            datasets: [{
-                data: [duplicateCount, data.total_rows - duplicateCount]
-            }]
-        }
-    });
-
-    // 🌟 Data Type Distribution
-    new Chart(document.getElementById('dtypeChart'), {
-        type: 'pie',
-        data: {
-            labels: dtypeKeys,
-            datasets: [{
-                data: dtypeVals
-            }]
-        }
-    });
-
-});
+             
+        });
 
    
     </script>
