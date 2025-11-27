@@ -104,17 +104,8 @@ Config</a></li>
                             </div>
                             </div>
                     <footer>
-                           <form id="uploadForm">
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Upload CSV or JSON</label>
-                    <input class="form-control form-control-lg" type="file" id="fileInput" accept=".csv,.json" required>
-                </div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg">Run Scan</button>
-                </div>
-            </form>
-
-            <div id="errorMsg" class="alert alert-danger mt-3 d-none"></div>
+                      <div id="upload-progress" style="display:none; width: 100%; background: #eee; margin-top: 10px;">
+    <div id="progress-bar" style="width:0%; height:5px; background:#4caf50;"></div>
 </div>
                     </footer>
 
@@ -125,10 +116,22 @@ Config</a></li>
      
     </div>
 
- 
+    <form id="auto-upload-form" style="display: none;" enctype="multipart/form-data">
+        <input type="file" id="auto-csv-file" name="file" accept=".csv">
+    </form>
 
     <script src="static/js/jquery-3.6.0.min.js"></script>
     <script src="static/js/script.js"></script>
- 
+    <script>
+        $(document).ready(function() {
+            $('#open-upload-modal').on('click', function() {
+                $('#auto-csv-file').click();
+            });
+
+            $('#auto-csv-file').on('change', function() {
+                $('#auto-upload-form').submit();
+            });
+        });
+    </script>
 </body>
 </html>
