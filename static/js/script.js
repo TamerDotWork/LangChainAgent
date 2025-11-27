@@ -56,7 +56,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
         // Listen for when a file is selected
         document.getElementById("ajaxFileInput").addEventListener("change", function() {
             // Check if a file was actually selected
-            if (this.value) {
+            if (this.files[0]) {
                 // Submit the form automatically
                 document.getElementById("uploadForm").submit();
             }
