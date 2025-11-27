@@ -18,7 +18,7 @@ document.getElementById('auto-upload-form').addEventListener('submit', async fun
 
             try {
                 // FIX: Use 'upload' (relative) instead of '/upload' (absolute)
-                const response = await fetch('/upload', {
+                const response = await fetch('LangChainAgent/upload', {
                     method: 'POST',
                     body: formData
                 });
