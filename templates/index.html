@@ -46,51 +46,56 @@
     </div>
 
     <script>
-        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const fileInput = document.getElementById('fileInput');
-            const errorDiv = document.getElementById('errorMsg');
-            const loader = document.getElementById('loading-overlay');
+    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const fileInput = document.getElementById('fileInput');
+        const errorDiv = document.getElementById('errorMsg');
+        const loader = document.getElementById('loading-overlay');
 
-            if (!fileInput.files[0]) {
-                alert("Please select a file");
-                return;
-            }
+        if (!fileInput.files[0]) {
+            alert("Please select a file");
+            return;
+        }
 
-            // 1. Show Loader
-            loader.style.display = 'block';
-            errorDiv.classList.add('d-none');
+        loader.style.display = 'block';
+        errorDiv.classList.add('d-none');
 
-            // 2. Prepare Data
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
 
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            // 1. Read response as text first to debug
+            const responseText = await response.text();
+
+            // 2. Try to parse as JSON
+            let result;
             try {
-                // 3. Send AJAX Request
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (!response.ok || result.error) {
-                    throw new Error(result.error || "Server Error");
-                }
-
-                // 4. Save JSON to Session Storage
-                sessionStorage.setItem('dqResult', JSON.stringify(result));
-
-                // 5. Redirect to Dashboard
-                window.location.href = "/dashboard";
-
+                result = JSON.parse(responseText);
             } catch (err) {
-                loader.style.display = 'none';
-                errorDiv.textContent = err.message;
-                errorDiv.classList.remove('d-none');
+                // If parsing fails, it's likely an HTML error page from Flask
+                console.error("Server returned HTML instead of JSON:", responseText);
+                throw new Error("Server Error: Check browser console for details (likely 500 or 404).");
             }
-        });
-    </script>
+
+            if (!response.ok || result.error) {
+                throw new Error(result.error || "Server Error");
+            }
+
+            sessionStorage.setItem('dqResult', JSON.stringify(result));
+            window.location.href = "/dashboard";
+
+        } catch (err) {
+            loader.style.display = 'none';
+            errorDiv.textContent = err.message;
+            errorDiv.classList.remove('d-none');
+        }
+    });
+</script>
 </body>
 </html>
