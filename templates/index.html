@@ -151,7 +151,7 @@ Config</a></li>
             processData: false,
             contentType: false,
             success: function() {
-                window.location.href = '/dashboard';
+                window.location.href = '/LangChainAgent/dashboard';
             }
         });
     });
@@ -162,7 +162,7 @@ Config</a></li>
         formData.append('file', $('#auto-csv-file')[0].files[0]);
 
         $.ajax({
-            url: '/upload',
+            url: '/LangChainAgent/upload',
             type: 'POST',
             data: formData,
             processData: false,
