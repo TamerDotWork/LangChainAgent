@@ -255,9 +255,9 @@ const qualityCtx = document.getElementById('qualityChart');
 new Chart(qualityCtx, {
     type: 'doughnut',
     data: {
-        labels: Object.keys(data.scans.quality_score.components),
+        labels: Object.keys(scans.quality_score.components),
         datasets: [{
-            data: Object.values(data.scans.quality_score.components)
+            data: Object.values(scans.quality_score.components)
         }]
     }
 });
@@ -265,16 +265,16 @@ new Chart(qualityCtx, {
 // Schema Table
 const schemaTable = document.getElementById("schemaTable");
 let schemaHtml = "<tr><th>Column</th><th>Data Type</th></tr>";
-Object.entries(data.scans.schema.dtypes).forEach(([col, dtype]) => {
+Object.entries(scans.schema.dtypes).forEach(([col, dtype]) => {
     schemaHtml += `<tr><td>${col}</td><td>${dtype}</td></tr>`;
 });
 schemaTable.innerHTML = schemaHtml;
 
 // Correlation Placeholder
 const corrBlock = document.getElementById("correlationBlock");
-corrBlock.innerHTML = Object.keys(data.scans.correlation.pairs).length === 0
+corrBlock.innerHTML = Object.keys(scans.correlation.pairs).length === 0
     ? "<p>❌ No correlations found above threshold.</p>"
-    : "<pre>" + JSON.stringify(data.scans.correlation.pairs, null, 2) + "</pre>";
+    : "<pre>" + JSON.stringify(scans.correlation.pairs, null, 2) + "</pre>";
              
         });
 
