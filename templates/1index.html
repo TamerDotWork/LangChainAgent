@@ -6,6 +6,9 @@
     <title>CSV File Upload and Preview</title>
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="stylesheet" href="../static/css/style.css">
+ 
+    <link rel="icon" href="static/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -88,26 +91,97 @@ Config</a></li>
                     <p class="copyrights">© 2025 Iceberg. All rights reserved.</p>
                 </div>
                 <div class="col-md-10">
-                        <!-- <h2>Clear, engaging and interactive</h2> -->
-                        <div class="banner">
-                    
-                            <div class="cta">
-                                <h1>Data Cleaning & Analysis Tool</h1>
-                                <button id="open-upload-modal" class="btn-primary"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M22 9.75C21.59 9.75 21.25 9.41 21.25 9V7C21.25 4.42 19.58 2.75 17 2.75H7C4.42 2.75 2.75 4.42 2.75 7V9C2.75 9.41 2.41 9.75 2 9.75C1.59 9.75 1.25 9.41 1.25 9V7C1.25 3.56 3.56 1.25 7 1.25H17C20.44 1.25 22.75 3.56 22.75 7V9C22.75 9.41 22.41 9.75 22 9.75Z" fill="white"/>
-<path d="M17 22.75H7C3.56 22.75 1.25 20.44 1.25 17V15C1.25 14.59 1.59 14.25 2 14.25C2.41 14.25 2.75 14.59 2.75 15V17C2.75 19.58 4.42 21.25 7 21.25H17C19.58 21.25 21.25 19.58 21.25 17V15C21.25 14.59 21.59 14.25 22 14.25C22.41 14.25 22.75 14.59 22.75 15V17C22.75 20.44 20.44 22.75 17 22.75Z" fill="white"/>
-<path d="M22 12.75H2C1.59 12.75 1.25 12.41 1.25 12C1.25 11.59 1.59 11.25 2 11.25H22C22.41 11.25 22.75 11.59 22.75 12C22.75 12.41 22.41 12.75 22 12.75Z" fill="white"/>
-</svg>Upload CSV</button>
-                            </div>
-                            <div class="hero">
-                                <img src="static/hero.png" alt="" class="img-responsive">
-                            </div>
-                            </div>
-                    <footer>
-                      <div id="upload-progress" style="display:none; width: 100%; background: #eee; margin-top: 10px;">
-    <div id="progress-bar" style="width:0%; height:5px; background:#4caf50;"></div>
+                      
+                   <div class="wrapper">
+    
+<div class="col12">
+<div class="col8">8</div>
+<div class="col4">
+        <div class="card-dark">
+        <div class="head"><div class="title">Total Quality Score</div></div>
+        <div class="chart">
+        <div>
+        <canvas id="myChart"></canvas>
+        </div>
+        </div>
+    <div class="foot"></div>
+    </div>
+
 </div>
-                    </footer>
+</div>
+<div class="col12">
+<div class="col8">
+    <div class="card">
+    <div class="head"><div class="title">Normalization</div><div class="legend">555 Cols</div></div>
+    <div class="chart">graph chart</div>
+    <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
+    </div>
+</div>
+<div class="col4">
+    <div class="col12">
+<div class="col6">
+    <div class="card">
+<div class="head"><div class="title">Duplicate rows</div><div class="legend">555 Cols</div></div>
+            <div class="chart">graph chart</div>
+            <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
+        </div>
+</div>
+<div class="col6">
+    <div class="card">
+<div class="head"><div class="title">Missing values</div><div class="legend">555 Cols</div></div>
+    <div class="chart ">
+    <canvas id="missingChart" height="100"></canvas>
+    </div>
+            <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
+        </div>
+</div>
+    </div>
+    <div class="col12">
+<div class="col6">
+    <div class="card">
+<div class="head"><div class="title">Distribution</div><div class="legend">555 Cols</div></div>
+    <div class="chart">
+    <canvas id="skewChart" height="100"></canvas>
+    </div>
+    <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
+        </div>
+</div>
+<div class="col6">
+    <div class="card">
+<div class="head"><div class="title">Correlation</div><div class="legend">555 Cols</div></div>
+    <div class="chart">
+    <div id="correlationBlock"></div>
+    </div>
+            <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
+        </div>
+</div>
+    </div>
+    <div class="col12">
+<div class="col4">
+    <div class="card">
+<div class="head"><div class="title">Normalization</div></div>
+            <div class="chart"><span id="normalization-val"></span></div>
+            <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
+        </div>
+</div>
+<div class="col4">
+    <div class="card">
+<div class="head"><div class="title">PII</div></div>
+            <div class="chart"><span id="pii-val"></span></div>
+            <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
+        </div>
+</div>
+    <div class="col4">
+        <div class="card">
+            <div class="head"><div class="title">Invalid</div></div>
+            <div class="chart"><span id="invalid-val"></span></div>
+            <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+                   </div>
 
                 </div>
             </div>
@@ -116,22 +190,47 @@ Config</a></li>
      
     </div>
 
-    <form id="auto-upload-form" style="display: none;" enctype="multipart/form-data">
-        <input type="file" id="auto-csv-file" name="file" accept=".csv">
-    </form>
+
+
+ 
 
     <script src="static/js/jquery-3.6.0.min.js"></script>
-    <script src="static/js/script.js"></script>
+    <!-- Logic Script -->
     <script>
-        $(document).ready(function() {
-            $('#open-upload-modal').on('click', function() {
-                $('#auto-csv-file').click();
-            });
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. Retrieve Data
+            const rawData = sessionStorage.getItem('dqResult');
+            
+            // if (!rawData) {
+            //     alert("No data found. Redirecting to upload.");
+            //     window.location.href = "/";
+            //     return;
+            // }
 
-            $('#auto-csv-file').on('change', function() {
-                $('#auto-upload-form').submit();
-            });
+            const data = JSON.parse(rawData);
+            const scans = data.scans;
+            
+            $("#invalid-val").html(scans.invalid.total_invalid);
+            $("#normalization-val").html(scans.invalid.total_invalid);
+            $("#pii-val").html(scans.invalid.total_invalid);
+ 
+             
+            console.log(data);
+            console.log(scans.correlation);
+            console.log(scans.duplicates);
+            console.log(scans.invalid);
+            console.log(scans.missing);
+            console.log(scans.outliers);
+            console.log(scans.quality_score);
+            console.log(scans.schema);
+            console.log(scans.skewness);
+            console.log(scans.text_quality);
+ 
+ 
         });
+
+   
     </script>
+ 
 </body>
 </html>
