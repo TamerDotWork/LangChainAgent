@@ -166,124 +166,27 @@ Config</a></li>
             //     return;
             // }
 
-            const data = JSON.parse(rawData);
-            const scans = data.scans;
+            const dataa = JSON.parse(rawData);
+            const scans = dataa.scans;
             
              
              
             console.log(data);
 
 
-  // ========= 1️⃣ Correlation HEATMAP ========= //
-    const corrPairs = Object.entries(scans.correlation.pairs);
-    const columns = [...new Set(corrPairs.flatMap(pair => pair[0].split("__")))];
+ const DATA_COUNT = 5;
+const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 100};
 
-    const heatData = [];
-    corrPairs.forEach(([pair, value]) => {
-        const [c1, c2] = pair.split("__");
-        heatData.push({
-            x: columns.indexOf(c1),
-            y: columns.indexOf(c2),
-            v: value
-        });
-    });
-
-    new Chart(document.getElementById("corrHeatmap"), {
-        type: 'matrix',
-        data: {
-            datasets: [{
-                label: 'Correlation',
-                data: heatData,
-                width: ({ chart }) => (chart.chartArea.width / columns.length) - 5,
-                height: ({ chart }) => (chart.chartArea.height / columns.length) - 5,
-                backgroundColor: ctx => {
-                    const v = ctx.dataset.data[ctx.dataIndex].v;
-                    const c = Math.round((v + 1) * 127);
-                    return `rgb(${255 - c}, ${c}, 150)`;
-                }
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                tooltip: { callbacks: { label: ctx => ctx.raw.v.toFixed(3) } }
-            },
-            scales: {
-                x: { ticks: { callback: i => columns[i] } },
-                y: { ticks: { callback: i => columns[i] } }
-            }
-        }
-    });
-
-    // ========= 2️⃣ Outliers Bar Chart ========= //
-    const outliers = scans.outliers.columns;
-    const outlierKeys = Object.keys(outliers);
-    const outlierVals = outlierKeys.map(c => outliers[c].outlier_count);
-
-    new Chart(document.getElementById('outliersChart'), {
-        type: 'bar',
-        data: {
-            labels: outlierKeys,
-            datasets: [{ label: 'Outliers', data: outlierVals }]
-        }
-    });
-
-    // ========= 3️⃣ Data Quality Score Gauge ========= //
-    const score = scans.quality_score.score;
-
-    new Chart(document.getElementById('qualityGauge'), {
-        type: 'gauge',
-        data: {
-            datasets: [{
-                value: score,
-                minValue: 0,
-                data: [50, 70, 85, 100],
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: { tooltip: { enabled: false } }
-        }
-    });
-
-    // ========= 4️⃣ Schema Data Types ========= //
-    const dtypes = scans.schema.dtypes;
-    const dtypeKeys = Object.keys(dtypes);
-    const dtypeVals = dtypeKeys.map(() => 1);
-
-    new Chart(document.getElementById('schemaPie'), {
-        type: 'pie',
-        data: {
-            labels: dtypeKeys,
-            datasets: [{
-                data: dtypeVals
-            }]
-        }
-    });
-
-option = {
-  tooltip: {
-    formatter: '{a} <br/>{b} : {c}%'
-  },
-  series: [
+const data = {
+  labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+  datasets: [
     {
-      name: 'Pressure',
-      type: 'gauge',
-      detail: {
-        formatter: '{value}'
-      },
-      data: [
-        {
-          value: scans.quality_score.score,
-          name: 'SCORE'
-        }
-      ]
+      label: 'Dataset 1',
+      data: Utils.numbers(scans.dataQualityScoreComponents, NUMBER_CFG),
+      backgroundColor: Object.values(Utils.CHART_COLORS),
     }
   ]
 };
-
-option && myChart.setOption(option);
- 
              
         });
 
