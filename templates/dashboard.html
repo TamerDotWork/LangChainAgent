@@ -7,14 +7,26 @@
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="stylesheet" href="static/css/reset.css">
     <link rel="icon" href="static/favicon.ico" type="image/x-icon">
-    <!-- Import Apache ECharts -->
+<!-- Import ECharts via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <style>
-         
-        .dashboard-header { text-align: center; margin-bottom: 20px; }
- 
-        /* Make full width for the bottom chart */
-        .full-width { grid-column: span 2; }
+        body { font-family: sans-serif; background-color: #f4f4f9; padding: 20px; }
+        h2 { color: #333; text-align: center; }
+        .dashboard-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .chart-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px;
+            width: 45%;
+            min-width: 400px;
+            height: 400px;
+        }
     </style>
 </head>
 <body>
