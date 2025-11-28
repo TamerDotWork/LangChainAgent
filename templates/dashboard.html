@@ -99,7 +99,10 @@ Config</a></li>
                   <div class="col-12">
                         <div class="col-8">8</div>
                         <div class="col-4">
-                            <div class="card">card 4</div>
+                            <div class="card">
+        <!-- Chart 1: Overall Score -->
+        <div id="gaugeChart" class="chart-box"></div>
+                            </div>
                         </div>
                   </div>
 
@@ -113,10 +116,16 @@ Config</a></li>
                         <div class="col-4">
                             <div class="col-12">
                             <div class="col-6">
-                            <div class="card">card 6</div>
+                            <div class="card">
+        <!-- Chart 2: Radar Components -->
+        <div id="radarChart" class="chart-box"></div>
+                            </div>
                             </div>
                             <div class="col-6">
-                            <div class="card">card 6</div>
+                            <div class="card">
+        <!-- Chart 3: Issues per Column -->
+        <div id="barChart" class="chart-box full-width"></div>
+                            </div>
                             </div>
                             </div>
                             <div class="col-12">
@@ -170,7 +179,99 @@ Config</a></li>
              
             console.log(data);
 
+// --- DATA PREPARATION FROM JSON ---
+ 
 
+        // --- CHART 1: GAUGE (Overall Score) ---
+        const gaugeChart = echarts.init(document.getElementById('gaugeChart'));
+        const gaugeOption = {
+            title: { text: 'Overall Quality Score', left: 'center' },
+            series: [{
+                type: 'gauge',
+                startAngle: 180,
+                endAngle: 0,
+                min: 0,
+                max: 100,
+                splitNumber: 5,
+                itemStyle: { color: '#5470C6' },
+                progress: { show: true, width: 30 },
+                pointer: { show: false },
+                axisLine: { lineStyle: { width: 30 } },
+                axisTick: { show: false },
+                splitLine: { length: 15, lineStyle: { width: 2, color: '#999' } },
+                axisLabel: { distance: 25, color: '#999', fontSize: 14 },
+                detail: {
+                    valueAnimation: true,
+                    formatter: '{value}%',
+                    color: 'auto',
+                    fontSize: 40,
+                    offsetCenter: [0, '-20%'] // Position text
+                },
+                data: [{ value: data.quality_score }]
+            }]
+        };
+        gaugeChart.setOption(gaugeOption);
+
+        // --- CHART 2: RADAR (Score Components) ---
+        const radarChart = echarts.init(document.getElementById('radarChart'));
+        const indicator = Object.keys(data.components).map(key => ({ name: key, max: 100 }));
+        const componentValues = Object.values(data.components);
+
+        const radarOption = {
+            title: { text: 'Quality Dimensions', left: 'center' },
+            tooltip: {},
+            radar: {
+                indicator: indicator,
+                radius: '65%',
+                axisName: { color: '#fff', backgroundColor: '#666', borderRadius: 3, padding: [3, 5] }
+            },
+            series: [{
+                name: 'Quality Metrics',
+                type: 'radar',
+                data: [{
+                    value: componentValues,
+                    name: 'Score',
+                    areaStyle: { color: 'rgba(84, 112, 198, 0.4)' },
+                    lineStyle: { color: '#5470C6' }
+                }]
+            }]
+        };
+        radarChart.setOption(radarOption);
+
+        // --- CHART 3: STACKED BAR (Column Health) ---
+        const barChart = echarts.init(document.getElementById('barChart'));
+        const barOption = {
+            title: { text: 'Data Issues by Column', left: 'center' },
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            legend: { top: 'bottom' },
+            grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
+            xAxis: { type: 'category', data: data.columns },
+            yAxis: { type: 'value', name: 'Row Count' },
+            series: [
+                {
+                    name: 'Missing Values',
+                    type: 'bar',
+                    stack: 'total',
+                    color: '#FAC858',
+                    data: data.missing_counts
+                },
+                {
+                    name: 'Invalid Format',
+                    type: 'bar',
+                    stack: 'total',
+                    color: '#EE6666',
+                    data: data.invalid_counts
+                }
+            ]
+        };
+        barChart.setOption(barOption);
+
+        // --- RESIZE HANDLER ---
+        window.addEventListener('resize', () => {
+            gaugeChart.resize();
+            radarChart.resize();
+            barChart.resize();
+        });
  
 
 
