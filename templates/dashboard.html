@@ -211,8 +211,8 @@ Config</a></li>
             const scans = data.scans;
             
             $("#invalid-val").html(scans.invalid.total_invalid);
-            $("#normalization-val").html(scans.text_quality);
-            $("#pii-val").html(scans.text_quality);
+            $("#normalization-val").html(scans.invalid.total_invalid);
+            $("#pii-val").html(scans.invalid.total_invalid);
  
              
             console.log(data);
