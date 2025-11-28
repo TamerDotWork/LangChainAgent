@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="static/css/style.css">
  
     <link rel="icon" href="static/favicon.ico" type="image/x-icon">
- 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -95,12 +95,11 @@ Config</a></li>
     
 <div class="col12">
 <div class="col8">8</div>
-<div class="col4"><div class="dashboard-grid">
-    <div class="card"><canvas id="corrHeatmap"></canvas></div>
-    <div class="card"><canvas id="outliersChart"></canvas></div>
-    <div class="card"><canvas id="qualityGauge"></canvas></div>
-    <div class="card"><canvas id="schemaPie"></canvas></div>
-</div></div>
+<div class="col4">
+<div>
+<canvas id="myChart"></canvas>
+</div>
+</div>
 </div>
 <div class="col12">
 <div class="col8">
@@ -148,35 +147,9 @@ Config</a></li>
      
     </div>
 
- <div>
-  <canvas id="myChart"></canvas>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-  const ctx = document.getElementById('myChart');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-</script>
-
+ 
 
     <script src="static/js/jquery-3.6.0.min.js"></script>
     <!-- Logic Script -->
@@ -197,8 +170,27 @@ Config</a></li>
              
              
             console.log(dataa);
-
  
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
              
         });
 
