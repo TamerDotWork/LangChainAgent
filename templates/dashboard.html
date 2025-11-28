@@ -203,10 +203,10 @@ Config</a></li>
             const dataa = JSON.parse(rawData);
             const scans = dataa.scans;
             
-            $("#invalid-val").text(scans.invalid.invalid_values);
+            $("#invalid-val").val(dataa.scans.invalid.total_invalid);
              
             console.log(dataa);
-            console.log(scans.invalid.invalid_values);
+            console.log(dataa.scans.invalid.total_invalid);
  
   const ctx = document.getElementById('myChart');
 
