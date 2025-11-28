@@ -103,8 +103,13 @@ Config</a></li>
                         <div class="col-8">8</div>
                         <div class="col-4">
                             <div class="card">
-        <!-- Chart 1: Overall Score -->
-        <div id="gaugeChart" class="chart-box"></div>
+       <div class="dashboard-container">
+        <!-- Chart 1: Quality Score Overview -->
+        <div id="scoreChart" class="chart-box"></div>
+        
+        <!-- Chart 2: Issues per Column -->
+        <div id="columnChart" class="chart-box"></div>
+    </div>
                             </div>
                         </div>
                   </div>
@@ -120,14 +125,12 @@ Config</a></li>
                             <div class="col-12">
                             <div class="col-6">
                             <div class="card">
-        <!-- Chart 2: Radar Components -->
-        <div id="radarChart" class="chart-box"></div>
+        
                             </div>
                             </div>
                             <div class="col-6">
                             <div class="card">
-        <!-- Chart 3: Issues per Column -->
-        <div id="barChart" class="chart-box full-width"></div>
+         
                             </div>
                             </div>
                             </div>
@@ -185,97 +188,134 @@ Config</a></li>
  
  
 
-        // --- CHART 1: GAUGE (Overall Score) ---
-        const gaugeChart = echarts.init(document.getElementById('gaugeChart'));
-        const gaugeOption = {
+       // A. Prepare Radar Chart Data (Quality Components)
+        const components = scans.quality_score.components;
+        const radarIndicator = [
+            { name: 'Completeness', max: 100 },
+            { name: 'Schema', max: 100 },
+            { name: 'Text Quality', max: 100 },
+            { name: 'Uniqueness', max: 100 },
+            { name: 'Validity', max: 100 }
+        ];
+        const radarValues = [
+            components.completeness_pct,
+            components.schema_pct,
+            components.text_quality_pct,
+            components.uniqueness_pct,
+            components.validity_pct
+        ];
+
+        // B. Prepare Bar Chart Data (Column Health)
+        // Get all unique column names from the schema
+        const columns = Object.keys(scans.schema.dtypes);
+        
+        const missingCounts = columns.map(col => scans.missing.missing_by_column[col] || 0);
+        const invalidCounts = columns.map(col => 
+            (scans.invalid.invalid_by_field[col] ? scans.invalid.invalid_by_field[col].count : 0)
+        );
+
+        // --- 3. RENDER CHARTS ---
+
+        // --- CHART 1: Quality Radar & Gauge ---
+        const scoreChart = echarts.init(document.getElementById('scoreChart'));
+        const scoreOption = {
             title: { text: 'Overall Quality Score', left: 'center' },
-            series: [{
-                type: 'gauge',
-                startAngle: 180,
-                endAngle: 0,
-                min: 0,
-                max: 100,
-                splitNumber: 5,
-                itemStyle: { color: '#5470C6' },
-                progress: { show: true, width: 30 },
-                pointer: { show: false },
-                axisLine: { lineStyle: { width: 30 } },
-                axisTick: { show: false },
-                splitLine: { length: 15, lineStyle: { width: 2, color: '#999' } },
-                axisLabel: { distance: 25, color: '#999', fontSize: 14 },
-                detail: {
-                    valueAnimation: true,
-                    formatter: '{value}%',
-                    color: 'auto',
-                    fontSize: 40,
-                    offsetCenter: [0, '-20%'] // Position text
-                },
-                data: [{ value: data.quality_score }]
-            }]
-        };
-        gaugeChart.setOption(gaugeOption);
-
-        // --- CHART 2: RADAR (Score Components) ---
-        const radarChart = echarts.init(document.getElementById('radarChart'));
-        const indicator = Object.keys(data.scans.components).map(key => ({ name: key, max: 100 }));
-        const componentValues = Object.values(data.components);
-
-        const radarOption = {
-            title: { text: 'Quality Dimensions', left: 'center' },
             tooltip: {},
-            radar: {
-                indicator: indicator,
-                radius: '65%',
-                axisName: { color: '#fff', backgroundColor: '#666', borderRadius: 3, padding: [3, 5] }
-            },
-            series: [{
-                name: 'Quality Metrics',
-                type: 'radar',
-                data: [{
-                    value: componentValues,
-                    name: 'Score',
-                    areaStyle: { color: 'rgba(84, 112, 198, 0.4)' },
-                    lineStyle: { color: '#5470C6' }
-                }]
-            }]
+            series: [
+                {
+                    type: 'gauge',
+                    center: ['50%', '60%'], // Move gauge down slightly
+                    radius: '60%',
+                    startAngle: 180,
+                    endAngle: 0,
+                    min: 0,
+                    max: 100,
+                    itemStyle: { color: '#5470C6' },
+                    progress: { show: true, width: 18 },
+                    pointer: { show: false },
+                    axisLine: { lineStyle: { width: 18 } },
+                    axisTick: { show: false },
+                    splitLine: { show: false },
+                    axisLabel: { show: false },
+                    detail: { 
+                        offsetCenter: [0, -10], 
+                        valueAnimation: true, 
+                        formatter: '{value}', 
+                        fontSize: 30 
+                    },
+                    data: [{ value: scans.quality_score.score, name: 'Score' }]
+                },
+                {
+                    type: 'radar',
+                    center: ['50%', '55%'], // Overlap radar in the center
+                    radius: '50%', // Make it fit inside
+                    indicator: radarIndicator,
+                    shape: 'circle',
+                    splitNumber: 4,
+                    axisName: { color: '#333' },
+                    splitLine: {
+                        lineStyle: {
+                            color: [
+                                'rgba(238, 197, 102, 0.1)', 'rgba(238, 197, 102, 0.2)',
+                                'rgba(238, 197, 102, 0.4)', 'rgba(238, 197, 102, 0.6)',
+                                'rgba(238, 197, 102, 0.8)', 'rgba(238, 197, 102, 1)'
+                            ].reverse()
+                        }
+                    },
+                    splitArea: { show: false },
+                    axisLine: { lineStyle: { color: 'rgba(238, 197, 102, 0.5)' } }
+                },
+                {
+                    type: 'radar',
+                    radarIndex: 0,
+                    data: [
+                        {
+                            value: radarValues,
+                            name: 'Quality Metrics',
+                            areaStyle: { color: 'rgba(255, 165, 0, 0.5)' },
+                            lineStyle: { color: 'orange' }
+                        }
+                    ]
+                }
+            ]
         };
-        radarChart.setOption(radarOption);
+        scoreChart.setOption(scoreOption);
 
-        // --- CHART 3: STACKED BAR (Column Health) ---
-        const barChart = echarts.init(document.getElementById('barChart'));
-        const barOption = {
-            title: { text: 'Data Issues by Column', left: 'center' },
+        // --- CHART 2: Column Health (Stacked Bar) ---
+        const columnChart = echarts.init(document.getElementById('columnChart'));
+        const columnOption = {
+            title: { text: 'Issues by Column', left: 'center' },
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-            legend: { top: 'bottom' },
-            grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
-            xAxis: { type: 'category', data: data.columns },
+            legend: { top: '30px' },
+            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+            xAxis: { type: 'category', data: columns },
             yAxis: { type: 'value', name: 'Row Count' },
             series: [
                 {
                     name: 'Missing Values',
                     type: 'bar',
                     stack: 'total',
-                    color: '#FAC858',
-                    data: data.missing_counts
+                    emphasis: { focus: 'series' },
+                    data: missingCounts,
+                    itemStyle: { color: '#fac858' } // Yellow
                 },
                 {
-                    name: 'Invalid Format',
+                    name: 'Invalid / Type Mismatch',
                     type: 'bar',
                     stack: 'total',
-                    color: '#EE6666',
-                    data: data.invalid_counts
+                    emphasis: { focus: 'series' },
+                    data: invalidCounts,
+                    itemStyle: { color: '#ee6666' } // Red
                 }
             ]
         };
-        barChart.setOption(barOption);
+        columnChart.setOption(columnOption);
 
-        // --- RESIZE HANDLER ---
-        window.addEventListener('resize', () => {
-            gaugeChart.resize();
-            radarChart.resize();
-            barChart.resize();
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            scoreChart.resize();
+            columnChart.resize();
         });
- 
 
 
              
