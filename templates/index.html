@@ -148,7 +148,7 @@ Config</a></li>
 
     $('#auto-upload-form').on('submit', async function(e) {
            e.preventDefault();
-           $('main').css('filter', 'blur(24px)');
+           $('main,header').css('filter', 'blur(24px)');
 
             const fileInput = document.getElementById('auto-csv-file');
             const errorDiv = document.getElementById('errorMsg');
