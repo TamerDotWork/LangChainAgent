@@ -7,20 +7,9 @@
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="stylesheet" href="static/css/reset.css">
     <link rel="icon" href="static/favicon.ico" type="image/x-icon">
-<!-- Import ECharts via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-    <style>
  
-        .chart-box {
-      
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 15px;
-            width: 45%;
-            min-width: 400px;
-            height: 400px;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    
 </head>
 <body>
 
@@ -108,11 +97,7 @@ Config</a></li>
                         <div class="col-8">8</div>
                         <div class="col-4">
                             <div class="card">
-       <div class="dashboard-container">
-        <!-- Chart 1: Quality Score Overview -->
-        <div id="scoreChart" class="chart-box"></div>
- 
-    </div>
+<div id="main" style="width: 600px;height:400px;"></div>
                             </div>
                         </div>
                   </div>
@@ -187,140 +172,35 @@ Config</a></li>
              
              
             console.log(data);
-
  
+      // Initialize the echarts instance based on the prepared dom
+      var myChart = echarts.init(document.getElementById('main'));
+
+      // Specify the configuration items and data for the chart
+      var option = {
+        title: {
+          text: 'ECharts Getting Started Example'
+        },
+        tooltip: {},
+        legend: {
+          data: scans.quality_score
+        },
+        xAxis: {
+          data: scans.quality_score
+        },
+        yAxis: {},
+        series: [
+          {
+            name: 'sales',
+            type: 'bar',
+            data: scans.quality_score
+          }
+        ]
+      };
+
+      // Display the chart using the configuration items and data just specified.
+      myChart.setOption(option);
  
-
-       // A. Prepare Radar Chart Data (Quality Components)
-        const components = scans.quality_score.components;
-        const radarIndicator = [
-            { name: 'Completeness', max: 100 },
-            { name: 'Schema', max: 100 },
-            { name: 'Text Quality', max: 100 },
-            { name: 'Uniqueness', max: 100 },
-            { name: 'Validity', max: 100 }
-        ];
-        const radarValues = [
-            components.completeness_pct,
-            components.schema_pct,
-            components.text_quality_pct,
-            components.uniqueness_pct,
-            components.validity_pct
-        ];
-
-        // B. Prepare Bar Chart Data (Column Health)
-        // Get all unique column names from the schema
-        const columns = Object.keys(scans.schema.dtypes);
-        
-        const missingCounts = columns.map(col => scans.missing.missing_by_column[col] || 0);
-        const invalidCounts = columns.map(col => 
-            (scans.invalid.invalid_by_field[col] ? scans.invalid.invalid_by_field[col].count : 0)
-        );
-
-        // --- 3. RENDER CHARTS ---
-
-        // --- CHART 1: Quality Radar & Gauge ---
-        const scoreChart = echarts.init(document.getElementById('scoreChart'));
-        const scoreOption = {
-            title: { text: 'Overall Quality Score', left: 'center' },
-            tooltip: {},
-            series: [
-                {
-                    type: 'gauge',
-                    center: ['50%', '60%'], // Move gauge down slightly
-                    radius: '60%',
-                    startAngle: 180,
-                    endAngle: 0,
-                    min: 0,
-                    max: 100,
-                    itemStyle: { color: '#5470C6' },
-                    progress: { show: true, width: 18 },
-                    pointer: { show: false },
-                    axisLine: { lineStyle: { width: 18 } },
-                    axisTick: { show: false },
-                    splitLine: { show: false },
-                    axisLabel: { show: false },
-                    detail: { 
-                        offsetCenter: [0, -10], 
-                        valueAnimation: true, 
-                        formatter: '{value}', 
-                        fontSize: 30 
-                    },
-                    data: [{ value: scans.quality_score.score, name: 'Score' }]
-                },
-                {
-                    type: 'radar',
-                    center: ['50%', '55%'], // Overlap radar in the center
-                    radius: '50%', // Make it fit inside
-                    indicator: radarIndicator,
-                    shape: 'circle',
-                    splitNumber: 4,
-                    axisName: { color: '#333' },
-                    splitLine: {
-                        lineStyle: {
-                            color: [
-                                'rgba(238, 197, 102, 0.1)', 'rgba(238, 197, 102, 0.2)',
-                                'rgba(238, 197, 102, 0.4)', 'rgba(238, 197, 102, 0.6)',
-                                'rgba(238, 197, 102, 0.8)', 'rgba(238, 197, 102, 1)'
-                            ].reverse()
-                        }
-                    },
-                    splitArea: { show: false },
-                    axisLine: { lineStyle: { color: 'rgba(238, 197, 102, 0.5)' } }
-                },
-                {
-                    type: 'radar',
-                    radarIndex: 0,
-                    data: [
-                        {
-                            value: radarValues,
-                            name: 'Quality Metrics',
-                            areaStyle: { color: 'rgba(255, 165, 0, 0.5)' },
-                            lineStyle: { color: 'orange' }
-                        }
-                    ]
-                }
-            ]
-        };
-        scoreChart.setOption(scoreOption);
-
-        // --- CHART 2: Column Health (Stacked Bar) ---
-        const columnChart = echarts.init(document.getElementById('columnChart'));
-        const columnOption = {
-            title: { text: 'Issues by Column', left: 'center' },
-            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-            legend: { top: '30px' },
-            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-            xAxis: { type: 'category', data: columns },
-            yAxis: { type: 'value', name: 'Row Count' },
-            series: [
-                {
-                    name: 'Missing Values',
-                    type: 'bar',
-                    stack: 'total',
-                    emphasis: { focus: 'series' },
-                    data: missingCounts,
-                    itemStyle: { color: '#fac858' } // Yellow
-                },
-                {
-                    name: 'Invalid / Type Mismatch',
-                    type: 'bar',
-                    stack: 'total',
-                    emphasis: { focus: 'series' },
-                    data: invalidCounts,
-                    itemStyle: { color: '#ee6666' } // Red
-                }
-            ]
-        };
-        columnChart.setOption(columnOption);
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            scoreChart.resize();
-            columnChart.resize();
-        });
-
-
              
         });
 
