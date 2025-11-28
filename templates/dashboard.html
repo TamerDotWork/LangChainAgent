@@ -177,26 +177,30 @@ Config</a></li>
       var myChart = echarts.init(document.getElementById('main'));
 
       // Specify the configuration items and data for the chart
-      var option = {
-        title: {
-          text: 'ECharts Getting Started Example'
-        },
-        tooltip: {},
-        legend: {
-          data: scans.quality_score
-        },
-        xAxis: {
-          data: scans.quality_score
-        },
-        yAxis: {},
-        series: [
-          {
-            name: 'sales',
-            type: 'bar',
-            data: scans.quality_score
-          }
-        ]
-      };
+      option = {
+  tooltip: {
+    formatter: '{a} <br/>{b} : {c}%'
+  },
+  series: [
+    {
+      name: 'Pressure',
+      type: 'gauge',
+      progress: {
+        show: true
+      },
+      detail: {
+        valueAnimation: true,
+        formatter: '{value}'
+      },
+      data: [
+        {
+          value: scans.quality_score,
+          name: 'SCORE'
+        }
+      ]
+    }
+  ]
+};
 
       // Display the chart using the configuration items and data just specified.
       myChart.setOption(option);
