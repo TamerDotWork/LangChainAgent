@@ -207,69 +207,24 @@ Config</a></li>
             //     return;
             // }
 
-            const dataa = JSON.parse(rawData);
-            const scans = dataa.scans;
+            const data = JSON.parse(rawData);
+            const scans = data.scans;
             
             $("#invalid-val").html(scans.invalid.total_invalid);
+            $("#invalid-val").html(scans.pii.total_pii);
              
-            console.log(dataa);
-            console.log(scans.invalid.total_invalid);
-            console.log(scans.missing.missing_by_column);
+            console.log(data);
+            console.log(scans.correlation);
+            console.log(scans.duplicates);
+            console.log(scans.invalid);
+            console.log(scans.missing);
+            console.log(scans.outliers);
+            console.log(scans.quality_score);
+            console.log(scans.schema);
+            console.log(scans.skewness);
+            console.log(scans.text_quality);
  
-  const ctx = document.getElementById('myChart');
-
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      
-      datasets: [{
-         
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: false
-        }
-      }
-    }
-  });
-
-  // Missing Chart
-const missingCtx = document.getElementById('missingChart');
-new Chart(missingCtx, {
-    type: 'bar',
-    data: {
-        labels: Object.keys(scans.missing.missing_by_column),
-        datasets: [{
-            label: 'Missing Count',
-            data: Object.values(scans.missing.missing_by_column)
-        }]
-    }
-});
-
-// Quality Score Donut
-const qualityCtx = document.getElementById('qualityChart');
-new Chart(qualityCtx, {
-    type: 'doughnut',
-    data: {
-        labels: Object.keys(scans.quality_score.components),
-        datasets: [{
-            data: Object.values(scans.quality_score.components)
-        }]
-    }
-});
-
  
-
-// Correlation Placeholder
-const corrBlock = document.getElementById("correlationBlock");
-corrBlock.innerHTML = Object.keys(scans.correlation.pairs).length === 0
-    ? "<p>❌ No correlations found above threshold.</p>"
-    : "<pre>" + JSON.stringify(scans.correlation.pairs, null, 2) + "</pre>";
-             
         });
 
    
