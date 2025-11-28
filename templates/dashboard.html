@@ -97,10 +97,48 @@ Config</a></li>
                 <div class="col-md-10">
                       
                    <div class="wrapper">
-    <h2>Dashboard</h2>
-
-    <div class="col8">8</div>
-    <div class="col4">4</div>
+    
+<div class="col12">
+<div class="col8">8</div>
+<div class="col4">4</div>
+</div>
+<div class="col12">
+<div class="col8">
+    <div class="card">card 8</div>
+</div>
+<div class="col4">
+    <div class="col12">
+    <div class="card">card 12</div>
+    </div>
+    <div class="col12">
+<div class="col6">
+    <div class="card">card 6</div>
+</div>
+<div class="col6">
+    <div class="card">card 6</div>
+</div>
+    </div>
+    <div class="col12">
+<div class="col6">
+    <div class="card">card 6</div>
+</div>
+<div class="col6">
+    <div class="card">card 6</div>
+</div>
+    </div>
+    <div class="col12">
+<div class="col4">
+    <div class="card">card 4</div>
+</div>
+<div class="col4">
+    <div class="card">card 4</div>
+</div>
+<div class="col4">
+    <div class="card">card 4</div>
+</div>
+    </div>
+</div>
+</div>
                    </div>
 
                 </div>
@@ -119,11 +157,11 @@ Config</a></li>
             // 1. Retrieve Data
             const rawData = sessionStorage.getItem('dqResult');
             
-            if (!rawData) {
-                alert("No data found. Redirecting to upload.");
-                window.location.href = "/";
-                return;
-            }
+            // if (!rawData) {
+            //     alert("No data found. Redirecting to upload.");
+            //     window.location.href = "/";
+            //     return;
+            // }
 
             const data = JSON.parse(rawData);
             const scans = data.scans;
