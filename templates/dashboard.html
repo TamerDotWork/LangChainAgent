@@ -182,7 +182,7 @@ Config</a></li>
              
             console.log(data);
 
-// --- DATA PREPARATION FROM JSON ---
+ 
  
 
         // --- CHART 1: GAUGE (Overall Score) ---
@@ -217,7 +217,7 @@ Config</a></li>
 
         // --- CHART 2: RADAR (Score Components) ---
         const radarChart = echarts.init(document.getElementById('radarChart'));
-        const indicator = Object.keys(data.components).map(key => ({ name: key, max: 100 }));
+        const indicator = Object.keys(data.scans.components).map(key => ({ name: key, max: 100 }));
         const componentValues = Object.values(data.components);
 
         const radarOption = {
