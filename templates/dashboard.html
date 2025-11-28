@@ -262,13 +262,7 @@ new Chart(qualityCtx, {
     }
 });
 
-// Schema Table
-const schemaTable = document.getElementById("schemaTable");
-let schemaHtml = "<tr><th>Column</th><th>Data Type</th></tr>";
-Object.entries(scans.schema.dtypes).forEach(([col, dtype]) => {
-    schemaHtml += `<tr><td>${col}</td><td>${dtype}</td></tr>`;
-});
-schemaTable.innerHTML = schemaHtml;
+ 
 
 // Correlation Placeholder
 const corrBlock = document.getElementById("correlationBlock");
