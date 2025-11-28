@@ -129,8 +129,9 @@ Config</a></li>
 <div class="col6">
     <div class="card">
 <div class="head"><div class="title">Missing values</div><div class="legend">555 Cols</div></div>
-            <div class="chart "><canvas id="missingChart" height="100"></canvas>
-</div>
+    <div class="chart ">
+    <canvas id="missingChart" height="100"></canvas>
+    </div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
@@ -139,14 +140,18 @@ Config</a></li>
 <div class="col6">
     <div class="card">
 <div class="head"><div class="title">Distribution</div><div class="legend">555 Cols</div></div>
-            <div class="chart">graph chart</div>
-            <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
+    <div class="chart">
+    <canvas id="skewChart" height="100"></canvas>
+    </div>
+    <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
 <div class="col6">
     <div class="card">
 <div class="head"><div class="title">Correlation</div><div class="legend">555 Cols</div></div>
-            <div class="chart">graph chart</div>
+    <div class="chart">
+    <div id="correlationBlock"></div>
+    </div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
@@ -244,6 +249,32 @@ new Chart(missingCtx, {
         }]
     }
 });
+
+// Quality Score Donut
+const qualityCtx = document.getElementById('qualityChart');
+new Chart(qualityCtx, {
+    type: 'doughnut',
+    data: {
+        labels: Object.keys(data.scans.quality_score.components),
+        datasets: [{
+            data: Object.values(data.scans.quality_score.components)
+        }]
+    }
+});
+
+// Schema Table
+const schemaTable = document.getElementById("schemaTable");
+let schemaHtml = "<tr><th>Column</th><th>Data Type</th></tr>";
+Object.entries(data.scans.schema.dtypes).forEach(([col, dtype]) => {
+    schemaHtml += `<tr><td>${col}</td><td>${dtype}</td></tr>`;
+});
+schemaTable.innerHTML = schemaHtml;
+
+// Correlation Placeholder
+const corrBlock = document.getElementById("correlationBlock");
+corrBlock.innerHTML = Object.keys(data.scans.correlation.pairs).length === 0
+    ? "<p>❌ No correlations found above threshold.</p>"
+    : "<pre>" + JSON.stringify(data.scans.correlation.pairs, null, 2) + "</pre>";
              
         });
 
