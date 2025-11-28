@@ -1,13 +1,7 @@
  .card{
     background: linear-gradient(0deg, #0B0B0B, #121212);
    
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    padding: 5rem ;
-    margin-bottom: 2rem;
-    flex-direction: row;
-    background-size: cover;margin-top: 4rem;    justify-content: space-around;
+    border-radius: 1rem; 
  }
  
  .col-1 {
