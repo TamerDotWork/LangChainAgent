@@ -745,6 +745,23 @@ header .row {
     margin: auto !important;
     height: 50% !important;
 }
+
+.cta-inner p {
+    color: #333;
+    padding-bottom: 64px;
+}
+ 
+ 
+.cta-inner h1 {
+    // font-family: "Fraunces", serif;
+    font-size: 4.8rem;
+    font-weight: 900;
+    font-optical-sizing: auto;
+    line-height: 6rem;
+    font-style: normal;
+    font-variation-settings: "SOFT" 0, "WONK" 0;
+}
+
 /*new*/
 .title {
     color: #666;
