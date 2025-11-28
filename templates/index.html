@@ -176,11 +176,13 @@ Config</a></li>
                 try {
                     result = JSON.parse(responseText);
                 } catch (err) {
+                     $('main,header').css('filter', 'none');
                     console.error("Server HTML Response:", responseText);
                     throw new Error(`Server returned error (${response.status}). See console.`);
                 }
 
                 if (!response.ok || result.error) {
+                    $('main,header').css('filter', 'none');
                     throw new Error(result.error || "Unknown Server Error");
                 }
 
