@@ -746,7 +746,18 @@ header .row {
     height: 50% !important;
 }
 /*new*/
-
+.title {
+    color: #666;
+    font-size: 1.2rem;
+}.note {
+    color: #333;
+}.tag.high {
+    text-decoration: none;
+    color: #f8f8f8;
+    background: #333;
+    padding: 2px 12px 2px 12px;
+    border-radius: 12px;
+}
 .card {
     background: linear-gradient(0deg, #0B0B0B, #121212);
      margin: 8px;
