@@ -234,15 +234,18 @@ select#file-select {
     border: 1px solid rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);    align-items: center;    justify-self: flex-start;
 }
+.btn-primary svg  {
+margin-right: 16px;    
+}
 .btn-primary svg path{
-margin-right: 16px;      fill: #000;
+     fill: #000;
 }
 .btn-primary:hover {
   color: #fff; 
     background-color: rgba(255,255,255,0.06);
 }
 .btn-primary:hover svg path{
-  margin-right: 16px;     fill: #fff;
+    fill: #fff;
    
 }
 input[type="file"] {}
