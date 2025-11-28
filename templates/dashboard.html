@@ -172,12 +172,14 @@ Config</a></li>
              
              
             console.log(data);
+            console.log(scans.quality_score);
  
-      // Initialize the echarts instance based on the prepared dom
-      var myChart = echarts.init(document.getElementById('main'));
+ 
+var chartDom = document.getElementById('main');
+var myChart = echarts.init(chartDom);
+var option;
 
-      // Specify the configuration items and data for the chart
-      option = {
+option = {
   tooltip: {
     formatter: '{a} <br/>{b} : {c}%'
   },
@@ -185,11 +187,7 @@ Config</a></li>
     {
       name: 'Pressure',
       type: 'gauge',
-      progress: {
-        show: true
-      },
       detail: {
-        valueAnimation: true,
         formatter: '{value}'
       },
       data: [
@@ -202,8 +200,7 @@ Config</a></li>
   ]
 };
 
-      // Display the chart using the configuration items and data just specified.
-      myChart.setOption(option);
+option && myChart.setOption(option);
  
              
         });
