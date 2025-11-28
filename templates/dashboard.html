@@ -97,8 +97,8 @@ Config</a></li>
 <div class="col12">
 <div class="col8">
 <div class="cta-inner">
-<small>Drag & Drop your file here or click to upload CSV / Excel</small>
-<h2>Data Wellness & Insights</h2>
+<small>Dataset name</small>
+<h2 id="dataset_name"></h2>
 <p>Upload your raw data and let AI automatically clean missing values, fix formatting issues, standardize columns, and generate insights — instantly and accurately</p>
 <button id="open-upload-modal" class="btn-primary"  type="button" >
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -116,6 +116,8 @@ Config</a></li>
             </div>
             <div class="middle">
                 <div class="col4"><div class="col12"><strong id="row_count"></strong></div><div class="col12"><span>Total Rows</span></div></div>
+                <div class="col4"><div class="col12"><strong id="most_frequent_type">Int64</strong></div><div class="col12"><span>Most frequent type</span></div></div>
+                <div class="col4"><div class="col12"><strong id="column_count"></strong></div><div class="col12"><span>Tatal Columns</span></div></div>
             </div>
     <div class="foot"></div>
     </div>
@@ -224,12 +226,14 @@ Config</a></li>
             const scans = data.scans;
             
             $("#row_count").html(data.row_count);
+            $("#column_count").html(data.column_count); 
+            $("#dataset_name").html(data.dataset_name);
             $("#invalid-val").html(scans.invalid.total_invalid);
             $("#normalization-val").html(scans.invalid.total_invalid);
             $("#pii-val").html(scans.invalid.total_invalid);
  
              
-            console.log(data);
+            console.log(data);  
             console.log(scans.correlation);
             console.log(scans.duplicates);
             console.log(scans.invalid);
