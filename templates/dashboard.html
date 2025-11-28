@@ -160,14 +160,14 @@ Config</a></li>
 <div class="col4">
     <div class="card">
 <div class="head"><div class="title">Normalization</div></div>
-            <div class="chart">graph chart</div>
+            <div class="chart"><span id="normalization-val"></span></div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
 <div class="col4">
     <div class="card">
 <div class="head"><div class="title">PII</div></div>
-            <div class="chart">graph chart</div>
+            <div class="chart"><span id="pii-val"></span></div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
@@ -211,6 +211,8 @@ Config</a></li>
             const scans = data.scans;
             
             $("#invalid-val").html(scans.invalid.total_invalid);
+            $("#normalization-val").html(scans.text_quality);
+            $("#pii-val").html(scans.text_quality);
  
              
             console.log(data);
