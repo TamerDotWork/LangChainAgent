@@ -777,6 +777,19 @@ height: 100%;
     flex-grow: 1;flex-direction: column;
    text-align: center;
 }
+.card-dark .title{
+ font-size: 3rem;
+  /* Apply a linear gradient as the background */
+  background: linear-gradient(to right, #ff00cc, #3333ff); 
+
+  /* Clip the background to the shape of the text */
+  -webkit-background-clip: text; 
+  background-clip: text; /* Standard property */
+
+  /* Make the text transparent to reveal the background gradient */
+  -webkit-text-fill-color: transparent; 
+  color: transparent; /* Standard property for newer browsers */
+}
 .card .head {
     display: flex;
     flex-direction: row;
