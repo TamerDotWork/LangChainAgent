@@ -172,7 +172,7 @@ Config</a></li>
              
              
             console.log(data);
-            console.log(scans.quality_score);
+            console.log(scans.quality_score.score);
  
  
 var chartDom = document.getElementById('main');
@@ -192,7 +192,7 @@ option = {
       },
       data: [
         {
-          value: scans.quality_score,
+          value: scans.quality_score.score,
           name: 'SCORE'
         }
       ]
