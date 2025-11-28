@@ -166,8 +166,8 @@ Config</a></li>
 </div>
     <div class="col4">
         <div class="card">
-            <div class="head"><div class="title">Normalization</div></div>
-            <div class="chart">graph chart</div>
+            <div class="head"><div class="title">Invalid</div></div>
+            <div class="chart"><span id="invalid-val"></span></div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
     </div>
@@ -203,7 +203,7 @@ Config</a></li>
             const dataa = JSON.parse(rawData);
             const scans = dataa.scans;
             
-             
+            $("#invalid-val").text(scans.invalid_values);
              
             console.log(dataa);
  
