@@ -138,14 +138,14 @@ Config</a></li>
     <div class="col12">
 <div class="col6">
     <div class="card">
-<div class="head"><div class="title">Duplicate rows</div><div class="legend"><span id="duplicates-val"></span>Rows</div></div>
+<div class="head"><div class="title">Duplicate rows</div><div class="legend"><span id="duplicates-val"></span> Rows</div></div>
             <div class="chart">graph chart</div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
 <div class="col6">
     <div class="card">
-<div class="head"><div class="title">Missing values</div><div class="legend">555 Cols</div></div>
+<div class="head"><div class="title">Missing values</div><div class="legend"><span id="missing-val"></span> Cols</div></div>
     <div class="chart ">
     <canvas id="missingChart" height="100"></canvas>
     </div>
@@ -227,6 +227,7 @@ Config</a></li>
             const data = JSON.parse(rawData);
             const scans = data.scans;
             
+            $("#missing-val").html(scans.missing.total_missing);
             $("#duplicates-val").html(scans.duplicates.duplicate_count);
             $("#row_count").html(data.row_count);
             $("#column_count").html(data.column_count); 
