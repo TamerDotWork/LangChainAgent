@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_experimental.agents import create_pandas_dataframe_agent
 
-# 1. Setup
+
 load_dotenv()
 if "GOOGLE_API_KEY" not in os.environ:
     print("❌ Error: GOOGLE_API_KEY is missing from .env file.")
