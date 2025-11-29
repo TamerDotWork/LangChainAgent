@@ -240,52 +240,44 @@ Config</a></li>
              
             console.log(data);  
  
-     const labels = Object.keys(scans.duplicates);
-    const values = Object.values(scans.duplicates);
+    // Replace with real dataset stats
+    const duplicateCount = scans.duplicates.duplicate_count;
+    const totalRows = data.row_count; // update dynamically from backend
 
-    const ctx = document.getElementById('duplicateChart').getContext('2d');
+    const uniqueCount = totalRows - duplicateCount;
+
+    const ctx = document.getElementById('duplicateHalfDonut').getContext('2d');
 
     new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: labels.map((label, i) => "Duplicate #" + (i + 1)), // cleaner labels
+            labels: ['Unique Rows', 'Duplicate Rows'],
             datasets: [{
-                label: 'Duplicate Count',
-                data: values,
-                borderWidth: 1,
+                data: [uniqueCount, duplicateCount],
                 backgroundColor: [
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 99, 132, 0.5)'
+                    'rgba(54, 162, 235, 0.7)',   // unique
+                    'rgba(255, 99, 132, 0.8)'    // duplicates
                 ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)'
-                ],
+                borderColor: '#fff',
+                borderWidth: 2
             }]
         },
         options: {
             responsive: true,
+            rotation: -90 * Math.PI / 180, // start angle (top)
+            circumference: 180 * Math.PI / 180, // half donut
+            cutout: '60%', // thickness
             plugins: {
+                legend: {
+                    position: 'bottom'
+                },
                 tooltip: {
                     callbacks: {
-                        afterLabel: function(context) {
-                            return "Row Pattern: " + labels[context.dataIndex];
+                        label: function(context) {
+                            const value = context.raw;
+                            const percentage = ((value / totalRows) * 100).toFixed(2);
+                            return `${context.label}: ${value} (${percentage}%)`;
                         }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: "Count"
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: "Duplicate Rows"
                     }
                 }
             }
