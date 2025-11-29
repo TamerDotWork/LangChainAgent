@@ -139,7 +139,7 @@ Config</a></li>
 <div class="col6">
     <div class="card">
 <div class="head"><div class="title">Duplicate rows</div><div class="legend"><span id="duplicates-val"></span> Rows</div></div>
-            <div class="chart">graph chart</div>
+            <div class="chart"><canvas id="duplicateChart"></canvas></div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
@@ -247,5 +247,64 @@ Config</a></li>
    
     </script>
  
+
+
+ 
+<script>
+     
+
+    const labels = Object.keys(scans.duplicates);
+    const values = Object.values(scans.duplicates);
+
+    const ctx = document.getElementById('duplicateChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels.map((label, i) => "Duplicate #" + (i + 1)), // cleaner labels
+            datasets: [{
+                label: 'Duplicate Count',
+                data: values,
+                borderWidth: 1,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 99, 132, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        afterLabel: function(context) {
+                            return "Row Pattern: " + labels[context.dataIndex];
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: "Count"
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: "Duplicate Rows"
+                    }
+                }
+            }
+        }
+    });
+</script>
+
 </body>
 </html>
