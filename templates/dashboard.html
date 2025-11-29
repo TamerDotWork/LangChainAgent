@@ -252,7 +252,7 @@ Config</a></li>
             console.log(data);  
  
 /* Text Quality */
-const textQual = scanData.scans.text_quality.columns || {};
+const textQual = data.scans.text_quality.columns || {};
 new Chart(document.getElementById("textQualityChart"), {
   type: "bar",
   data: {
