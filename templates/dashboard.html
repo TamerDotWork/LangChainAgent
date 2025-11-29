@@ -299,7 +299,7 @@ new Chart(document.getElementById("correlationHeatmap"), {
             width: () => 40,
             height: () => 40,
             backgroundColor(context) {
-                const value = context.dataset.data[context.dataIndex].v;
+                const value = context.dataset.data[context.dataIndex].value;
                 if (value === null) return "rgba(200,200,200,0.2)";
                 const alpha = Math.abs(value);
                 return value >= 0
