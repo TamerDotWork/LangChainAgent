@@ -290,7 +290,7 @@ const minimalOptions = {
 };
 
 // Quality Score Doughnut
-new Chart(document.getElementById("qualityScoreDoughnut"), {
+new Chart(document.getElementById("qualityScoreChart"), {
     type: 'doughnut',
     data: {
         labels: ['Score', 'Remaining'],
@@ -303,7 +303,7 @@ new Chart(document.getElementById("qualityScoreDoughnut"), {
 });
 
 // Duplicate Rows Doughnut
-new Chart(document.getElementById("duplicateDoughnut"), {
+new Chart(document.getElementById("duplicateChart"), {
     type: 'doughnut',
     data: {
         labels: ['Duplicates', 'Remaining'],
@@ -316,7 +316,7 @@ new Chart(document.getElementById("duplicateDoughnut"), {
 });
 
 // Missing Values Doughnut
-new Chart(document.getElementById("missingDoughnut"), {
+new Chart(document.getElementById("missingChart"), {
     type: 'doughnut',
     data: {
         labels: ['Missing', 'Remaining'],
