@@ -268,10 +268,13 @@ new Chart(document.getElementById("skewnessChart"), {
     },
     options: {
         responsive: true,
-        scales: {
-            y: {
-                title: { display: true, text: "Skewness" }
-            }
+         plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+        },
+       scales: {
+            x: { display: false },
+            y: { display: false }
         }
     }
 });
