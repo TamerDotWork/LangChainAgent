@@ -246,7 +246,7 @@ Config</a></li>
     const ctx = document.getElementById('duplicateChart').getContext('2d');
 
     new Chart(ctx, {
-        type: 'bar',
+        type: 'doughnut',
         data: {
             labels: labels.map((label, i) => "Duplicate #" + (i + 1)), // cleaner labels
             datasets: [{
