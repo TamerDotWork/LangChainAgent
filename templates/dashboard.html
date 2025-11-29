@@ -158,7 +158,7 @@ Config</a></li>
     <div class="card">
 <div class="head"><div class="title">Distribution</div><div class="legend">555 Cols</div></div>
     <div class="chart">
-    <div id="histogramContainer" class="d-grid gap-3"></div>
+  <canvas id="distribution"  ></canvas>
     </div>
     <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
@@ -167,10 +167,7 @@ Config</a></li>
     <div class="card">
 <div class="head"><div class="title">Correlation</div><div class="legend">555 Cols</div></div>
     <div class="chart">
-    <div id="correlationBlock">
-        <div class="col-md-12"><canvas id="correlationHeatmap" height="160"></canvas>
-</div>
-</div>
+        <canvas id="correlation"  ></canvas>
     </div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
@@ -180,22 +177,15 @@ Config</a></li>
 <div class="col4">
     <div class="card">
 <div class="head"><div class="title">Normalization</div></div>
-            <div class="chart"><canvas id="textQualityChart" height="160"></canvas></div>
+            <div class="chart"><span id="normalization-val"></span></div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
 <div class="col4">
     <div class="card">
 <div class="head"><div class="title">PII</div></div>
-            <div class="chart">
-    <div id="piiSummary" class="mb-2"></div>
-        <div class="table-sample">
-          <table class="table table-sm">
-            <thead><tr><th>Type</th><th>Value (example)</th><th>Source</th></tr></thead>
-            <tbody id="piiTable"></tbody>
-          </table>
-        </div>
-    </div>
+            <div class="chart"><span id="pii-val"></span></div>
+       
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
@@ -251,18 +241,15 @@ Config</a></li>
              
             console.log(data);  
  
-/* Text Quality */
-const textQual = data.scans.text_quality.columns || {};
-new Chart(document.getElementById("textQualityChart"), {
-  type: "bar",
+/* Dtype chart */
+const dtypes = data.scans.schema.dtypes || {};
+new Chart(document.getElementById("dtypeChart"), {
+  type: "pie",
   data: {
-    labels: Object.keys(textQual),
-    datasets: [
-      { label: "Distinct count", data: Object.values(textQual).map(v=>v.distinct_count || 0) },
-      { label: "Avg length", data: Object.values(textQual).map(v=>v.avg_length || 0) }
-    ]
+    labels: Object.keys(dtypes),
+    datasets: [{ data: Object.keys(dtypes).map(k=>1) }]
   },
-  options:{scales:{y:{beginAtZero:true}}}
+  options:{plugins:{legend:{position:'bottom'}}}
 });
  
         });
