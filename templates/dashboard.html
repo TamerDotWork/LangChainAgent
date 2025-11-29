@@ -227,7 +227,7 @@ Config</a></li>
             const data = JSON.parse(rawData);
             const scans = data.scans;
             
-            $("#duplicates-val").html(scans.duplicate_count);
+            $("#duplicates-val").html(scans.duplicates.duplicate_count);
             $("#row_count").html(data.row_count);
             $("#column_count").html(data.column_count); 
             $("#dataset_name").html(data.dataset_name);
