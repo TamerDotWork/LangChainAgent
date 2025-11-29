@@ -227,6 +227,7 @@ Config</a></li>
             const data = JSON.parse(rawData);
             const scans = data.scans;
             
+            $("#most_frequent_type").html(scans.schema.most_common_dtype.dtype);
             $("#missing-val").html(scans.missing.total_missing);
             $("#duplicates-val").html(scans.duplicates.duplicate_count);
             $("#row_count").html(data.row_count);
