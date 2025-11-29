@@ -277,7 +277,10 @@ new Chart(document.getElementById("skewnessChart"), {
         }
     }
 });
-
+// Extract metrics dynamically
+const totalQualityScore = data.scans.quality_score.score;
+const duplicateRows = data.scans.duplicates.duplicate_count;
+const missingValues = data.scans.missing.total_missing;
 // Common minimal chart options
 const minimalOptions = {
     plugins: { legend: { display: false }, tooltip: { enabled: false } },
