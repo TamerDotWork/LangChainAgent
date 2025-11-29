@@ -278,6 +278,33 @@ new Chart(document.getElementById("skewnessChart"), {
     }
 });
 
+// Common minimal chart options
+const minimalOptions = {
+    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+    scales: { x: { display: false }, y: { display: false } }
+};
+
+// Total Quality Score Chart
+new Chart(document.getElementById("qualityScoreChart"), {
+    type: 'bar',
+    data: { labels: [''], datasets: [{ data: [totalQualityScore], backgroundColor: '#28a745' }] },
+    options: minimalOptions
+});
+
+// Duplicate Rows Chart
+new Chart(document.getElementById("duplicateChart"), {
+    type: 'bar',
+    data: { labels: [''], datasets: [{ data: [duplicateRows], backgroundColor: '#ffc107' }] },
+    options: minimalOptions
+});
+
+// Missing Values Chart
+new Chart(document.getElementById("missingChart"), {
+    type: 'bar',
+    data: { labels: [''], datasets: [{ data: [missingValues], backgroundColor: '#dc3545' }] },
+    options: minimalOptions
+});
+
  
  
         });
