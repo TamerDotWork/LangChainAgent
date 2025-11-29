@@ -129,7 +129,7 @@ Config</a></li>
 <div class="col12">
 <div class="col8">
     <div class="card">
-    <div class="head"><div class="title">Normalization</div><div class="legend">555 Cols</div></div>
+    <div class="head"><div class="title">Preview</div><div class="legend">555 Cols</div></div>
     <div class="chart">graph chart</div>
     <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
     </div>
@@ -138,7 +138,7 @@ Config</a></li>
     <div class="col12">
 <div class="col6">
     <div class="card">
-<div class="head"><div class="title">Duplicate rows</div><div class="legend">555 Cols</div></div>
+<div class="head"><div class="title">Duplicate rows</div><div class="legend"><span id="duplicates-val"></span></div></div>
             <div class="chart">graph chart</div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
@@ -227,6 +227,7 @@ Config</a></li>
             const data = JSON.parse(rawData);
             const scans = data.scans;
             
+            $("#duplicates-val").html(data.duplicate_count);
             $("#row_count").html(data.row_count);
             $("#column_count").html(data.column_count); 
             $("#dataset_name").html(data.dataset_name);
