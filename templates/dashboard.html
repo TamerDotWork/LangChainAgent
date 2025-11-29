@@ -240,48 +240,57 @@ Config</a></li>
              
             console.log(data);  
  
-    // Replace with real dataset stats
-    const duplicateCount = scans.duplicates.duplicate_count;
-    const totalRows = data.row_count; // update dynamically from backend
-
-    const uniqueCount = totalRows - duplicateCount;
+   const duplicateCount = scans.duplicates.duplicate_count;
+    const totalRows = data.row_count; // dynamically update
+    const duplicatePercent = (duplicateCount / totalRows) * 100;
+    const uniquePercent = 100 - duplicatePercent;
 
     const ctx = document.getElementById('duplicateChart').getContext('2d');
 
     new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Unique Rows', 'Duplicate Rows'],
+            labels: ['Duplicates', 'Unique'],
             datasets: [{
-                data: [uniqueCount, duplicateCount],
+                data: [duplicatePercent, uniquePercent],
                 backgroundColor: [
-                    'rgba(54, 162, 235, 0.7)',   // unique
-                    'rgba(255, 99, 132, 0.8)'    // duplicates
+                    'rgba(255, 99, 132, 0.85)',   // duplicates
+                    'rgba(235, 235, 235, 0.8)'    // remaining
                 ],
-                borderColor: '#fff',
-                borderWidth: 2
+                borderWidth: 0
             }]
         },
         options: {
             responsive: true,
-            rotation: -90 * Math.PI / 180, // start angle (top)
-            circumference: 180 * Math.PI / 180, // half donut
-            cutout: '60%', // thickness
+            rotation: -90 * Math.PI / 180,
+            circumference: 180 * Math.PI / 180,
+            cutout: '72%',
             plugins: {
-                legend: {
-                    position: 'bottom'
-                },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            const value = context.raw;
-                            const percentage = ((value / totalRows) * 100).toFixed(2);
-                            return `${context.label}: ${value} (${percentage}%)`;
+                            return `${context.label}: ${context.raw.toFixed(2)}%`;
                         }
                     }
                 }
             }
-        }
+        },
+        plugins: [{
+            id: 'centerText',
+            afterDraw: (chart) => {
+                const { ctx, chartArea: { width, top } } = chart;
+                ctx.save();
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 20px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(
+                    duplicatePercent.toFixed(2) + '%',
+                    width / 2,
+                    top + 45
+                );
+            }
+        }]
     });
  
         });
