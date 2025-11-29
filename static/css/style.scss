@@ -902,6 +902,9 @@ height: 100%;
 
 
     /* Values*/
+    .chart {
+    height: 100%;
+}
 span#invalid-val, span#pii-val,span#normalization-val,#row_count,#most_frequent_type,#column_count {
     font-size: 2rem;
 }
