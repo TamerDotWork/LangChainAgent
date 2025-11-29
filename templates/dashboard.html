@@ -272,64 +272,7 @@ new Chart(document.getElementById("skewnessChart"), {
     }
 });
 
-// Correlation Heatmap
-const correlation = data.scans.correlation.pairs || {};
-
-// Convert to matrix structure for heatmap
-const cols = [...new Set(
-    Object.keys(correlation).flatMap(k => k.split('__'))
-)];
-
-const matrixData = [];
-cols.forEach((row, i) => {
-    cols.forEach((col, j) => {
-        let key1 = `${row}__${col}`;
-        let key2 = `${col}__${row}`;
-        let val = correlation[key1] ?? correlation[key2] ?? null;
-        matrixData.push({ x: j, y: i, v: val });
-    });
-});
-
-new Chart(document.getElementById("correlationHeatmap"), {
-    type: "matrix",
-    data: {
-        datasets: [{
-            label: "Correlation",
-            data: matrixData,
-            width: () => 40,
-            height: () => 40,
-            backgroundColor(context) {
-                const value = context.dataset.data[context.dataIndex].value;
-                if (value === null) return "rgba(200,200,200,0.2)";
-                const alpha = Math.abs(value);
-                return value >= 0
-                    ? `rgba(0, 123, 255, ${alpha})`
-                    : `rgba(255, 56, 96, ${alpha})`;
-            },
-            borderColor: "rgba(200,200,200,0.4)",
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    title: (ctx) => `${cols[ctx[0].raw.y]} x ${cols[ctx[0].raw.x]}`,
-                    label: (ctx) => `Corr: ${ctx.raw.v ?? "N/A"}`
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: { callback: (_, i) => cols[i] }
-            },
-            y: {
-                ticks: { callback: (_, i) => cols[i] }
-            }
-        }
-    }
-});
+ 
  
         });
 
