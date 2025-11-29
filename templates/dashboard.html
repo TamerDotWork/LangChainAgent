@@ -158,7 +158,7 @@ Config</a></li>
     <div class="card">
 <div class="head"><div class="title">Distribution</div><div class="legend">555 Cols</div></div>
     <div class="chart">
-  <canvas id="distribution"  ></canvas>
+    <canvas id="skewnessChart" height="120"></canvas>
     </div>
     <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
@@ -167,7 +167,8 @@ Config</a></li>
     <div class="card">
 <div class="head"><div class="title">Correlation</div><div class="legend">555 Cols</div></div>
     <div class="chart">
-        <canvas id="correlation"  ></canvas>
+    <canvas id="correlationHeatmap" height="250"></canvas>
+
     </div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
@@ -234,22 +235,98 @@ Config</a></li>
             $("#row_count").html(data.row_count);
             $("#column_count").html(data.column_count); 
             $("#dataset_name").html(data.dataset_name);
-            $("#invalid-val").html(scans.invalid.total_invalid);
+
+
             $("#normalization-val").html(scans.invalid.total_invalid);
             $("#pii-val").html(scans.invalid.total_invalid);
- 
+            $("#invalid-val").html(scans.invalid.total_invalid);
              
             console.log(data);  
  
-/* Dtype chart */
-const dtypes = data.scans.schema.dtypes || {};
-new Chart(document.getElementById("dtypeChart"), {
-  type: "pie",
-  data: {
-    labels: Object.keys(dtypes),
-    datasets: [{ data: Object.keys(dtypes).map(k=>1) }]
-  },
-  options:{plugins:{legend:{position:'bottom'}}}
+ 
+ // Extract skewness
+const skewValues = data.scans.skewness.skew_values;
+const skewLabels = Object.keys(skewValues);
+const skewData = Object.values(skewValues);
+
+// Skewness chart
+new Chart(document.getElementById("skewnessChart"), {
+    type: 'bar',
+    data: {
+        labels: skewLabels,
+        datasets: [{
+            label: 'Skewness Value',
+            data: skewData,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                title: { display: true, text: "Skewness" }
+            }
+        }
+    }
+});
+
+// Correlation Heatmap
+const correlation = data.scans.correlation.pairs || {};
+
+// Convert to matrix structure for heatmap
+const cols = [...new Set(
+    Object.keys(correlation).flatMap(k => k.split('__'))
+)];
+
+const matrixData = [];
+cols.forEach((row, i) => {
+    cols.forEach((col, j) => {
+        let key1 = `${row}__${col}`;
+        let key2 = `${col}__${row}`;
+        let val = correlation[key1] ?? correlation[key2] ?? null;
+        matrixData.push({ x: j, y: i, v: val });
+    });
+});
+
+new Chart(document.getElementById("correlationHeatmap"), {
+    type: "matrix",
+    data: {
+        datasets: [{
+            label: "Correlation",
+            data: matrixData,
+            width: () => 40,
+            height: () => 40,
+            backgroundColor(context) {
+                const value = context.dataset.data[context.dataIndex].v;
+                if (value === null) return "rgba(200,200,200,0.2)";
+                const alpha = Math.abs(value);
+                return value >= 0
+                    ? `rgba(0, 123, 255, ${alpha})`
+                    : `rgba(255, 56, 96, ${alpha})`;
+            },
+            borderColor: "rgba(200,200,200,0.4)",
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    title: (ctx) => `${cols[ctx[0].raw.y]} x ${cols[ctx[0].raw.x]}`,
+                    label: (ctx) => `Corr: ${ctx.raw.v ?? "N/A"}`
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: { callback: (_, i) => cols[i] }
+            },
+            y: {
+                ticks: { callback: (_, i) => cols[i] }
+            }
+        }
+    }
 });
  
         });
