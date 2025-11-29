@@ -285,6 +285,7 @@ const missingValues = data.scans.missing.total_missing;
 
 // Common doughnut options (minimal)
 const minimalOptions = {
+    responsive: true,
     plugins: { legend: { display: false }, tooltip: { enabled: false } },
     cutout: '70%'
 };
@@ -308,7 +309,7 @@ new Chart(document.getElementById("duplicateChart"), {
     data: {
         labels: ['Duplicates', 'Remaining'],
         datasets: [{
-            data: [duplicateRows, 500 - duplicateRows], // total rows = 500
+            data: [duplicateRows, data.row_count - duplicateRows], // total rows = 500
             backgroundColor: ['#ffc107', '#e9ecef']
         }]
     },
@@ -321,7 +322,7 @@ new Chart(document.getElementById("missingChart"), {
     data: {
         labels: ['Missing', 'Remaining'],
         datasets: [{
-            data: [missingValues, 500 - missingValues], // total rows = 500
+            data: [missingValues, data.row_count - missingValues], // total rows = 500
             backgroundColor: ['#dc3545', '#e9ecef']
         }]
     },
