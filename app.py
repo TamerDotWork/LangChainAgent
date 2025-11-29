@@ -119,11 +119,25 @@ class DataQualityEngine:
 
     def scan_schema_types(self) -> Dict[str, Any]:
         dtype_map = {col: str(self.df[col].dtype) for col in self.df.columns}
+
+        # Count the most frequent datatype
+        dtype_counts = {}
+        for dtype in dtype_map.values():
+            dtype_counts[dtype] = dtype_counts.get(dtype, 0) + 1
+
+        most_common_dtype = max(dtype_counts, key=dtype_counts.get)
+
         return {
             "metric": "schema",
             "dtypes": dtype_map,
-            "datetime_columns_detected": self.datetime_cols
+            "datetime_columns_detected": self.datetime_cols,
+            "most_common_dtype": {
+                "dtype": most_common_dtype,
+                "count": dtype_counts[most_common_dtype],
+                "percentage": round((dtype_counts[most_common_dtype] / len(self.df.columns)) * 100, 2)
+            }
         }
+
 
     def scan_invalid(self) -> Dict[str, Any]:
         """
