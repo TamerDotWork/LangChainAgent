@@ -403,10 +403,17 @@ class DataQualityEngine:
 # ------------------------
 app = Flask(__name__)
 
+# Route 1: The Upload Page
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
+# Route 2: The Dashboard Page (Frontend will redirect here)
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    return render_template('dashboard.html')
+
+# Route 3: The API to Process the file
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -419,7 +426,7 @@ def upload_file():
     try:
         # Read file into Pandas
         if file.filename.endswith('.csv'):
-            # Convert to string buffer to avoid seek/read issues with some Flask versions/configs
+            # Convert to string buffer for robust CSV reading
             stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
             df = pd.read_csv(stream)
         elif file.filename.endswith('.json'):
@@ -431,7 +438,10 @@ def upload_file():
         engine = DataQualityEngine(df, name=file.filename, sample_size=5)
         raw_result = engine.run_all()
         
+        # Clean Result (handle NaNs, Infinities for JSON)
         clean_result = engine.get_clean_json(raw_result)
+        
+        # Return JSON. The Frontend 'index.html' receives this, saves it, and redirects to /dashboard
         return jsonify(clean_result)
 
     except Exception as e:
@@ -439,5 +449,4 @@ def upload_file():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5006, debug=True)
-
     
