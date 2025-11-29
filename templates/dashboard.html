@@ -113,7 +113,8 @@ Config</a></li>
         <div class="head"><div class="title">Total Quality Score</div></div>
             <div class="chart">
                 <div>
-                <canvas id="myChart"></canvas>
+                <canvas id="qualityScoreChart" height="50"></canvas>
+
                 </div>
             </div>
             <div class="middle">
@@ -132,7 +133,7 @@ Config</a></li>
 <div class="col8">
     <div class="card">
     <div class="head"><div class="title">Preview</div><div class="legend">555 Cols</div></div>
-    <div class="chart">graph chart</div>
+    <div class="chart"></div>
     <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
     </div>
 </div>
@@ -141,16 +142,14 @@ Config</a></li>
 <div class="col6">
     <div class="card">
 <div class="head"><div class="title">Duplicate rows</div><div class="legend"><span id="duplicates-val"></span> Rows</div></div>
-            <div class="chart"><canvas id="duplicateChart"></canvas></div>
+            <div class="chart"><canvas id="duplicateChart" height="50"></canvas></div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
 <div class="col6">
     <div class="card">
 <div class="head"><div class="title">Missing values</div><div class="legend"><span id="missing-val"></span> Cols</div></div>
-    <div class="chart ">
-    <canvas id="missingChart" ></canvas>
-    </div>
+    <div class="chart "><canvas id="missingChart" height="50"></canvas></div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
