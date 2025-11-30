@@ -20,7 +20,7 @@ app = Flask(__name__)
  
 
 # Route 3: The API to Process the file
-@app.route('/api', methods=['GET'])
+@app.route('/api', methods=['POST'])
 def api():
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
