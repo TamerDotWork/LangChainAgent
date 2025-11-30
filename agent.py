@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any, List, Callable
+from scipy.stats import zscore
 
 from flask import Flask, render_template, request, jsonify
 
@@ -63,6 +64,32 @@ def api():
     # ---- Duplicate Rows ----
     duplicate_count = int(df.duplicated().sum())
 
+
+    # ---- Distribution & Outliers ----
+    distribution = {}
+    outliers = {}
+
+    numeric_cols = df.select_dtypes(include=np.number).columns
+
+    for col in numeric_cols:
+        col_data = df[col].dropna()  # ignore NaNs for stats
+        # Distribution stats
+        distribution[col] = {
+            "mean": float(col_data.mean()),
+            "median": float(col_data.median()),
+            "min": float(col_data.min()),
+            "max": float(col_data.max()),
+            "std": float(col_data.std()),
+            "25%": float(col_data.quantile(0.25)),
+            "50%": float(col_data.quantile(0.5)),
+            "75%": float(col_data.quantile(0.75))
+        }
+        
+        # Outliers (using Z-score threshold > 3)
+        if len(col_data) > 1:  # avoid single-value columns
+            z_scores = np.abs(zscore(col_data))
+            outliers[col] = int((z_scores > 3).sum())
+
     return jsonify({
         "row_count": int(df.shape[0]),
         "column_count": int(df.shape[1]),
@@ -70,6 +97,8 @@ def api():
         "duplicate_count": duplicate_count,
         "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
         "pii_fields": pii_fields,
+        "distribution": distribution,
+        "outliers": outliers
     })
 
     return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
