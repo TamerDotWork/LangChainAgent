@@ -129,6 +129,7 @@ def api():
                 "column_count": int(df.shape[1]),
                 "most_frequent_dtype": most_frequent_dtype,
                 "duplicate_count": duplicate_count,
+                "missing_count": int(missing_count),
                 "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
                 "pii_fields": pii_fields,
                 "distribution": distribution,
