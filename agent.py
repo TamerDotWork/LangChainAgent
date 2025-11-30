@@ -64,8 +64,8 @@ def api():
 
     return jsonify({
         "row_count": int(df.shape[0]),
+        "most_frequent_dtype": most_frequent_dtype,        
         "column_count": int(df.shape[1]),
-        "most_frequent_dtype": most_frequent_dtype,
         "duplicate_count": duplicate_count,
         "missing_count": int(missing_count),
         "pii_fields": pii_fields,
