@@ -333,7 +333,48 @@ new Chart(document.getElementById("missingChart"), {
  
         });
 
-   
+   const data = {
+  labels: ['Value 1', 'Value 2', 'Hidden Padding'], // Add a label for the hidden segment
+  datasets: [{
+    data: [70, 30, 100], // Example values: 70% for Value 1, 30% for Value 2, 100% for hidden padding
+    backgroundColor: [
+      'rgba(255, 99, 132, 0.8)', // Color for Value 1
+      'rgba(54, 162, 235, 0.8)', // Color for Value 2
+      'rgba(0, 0, 0, 0)' // Transparent color for the hidden padding
+    ],
+    borderColor: [
+      'rgba(255, 99, 132, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(0, 0, 0, 0)'
+    ],
+    borderWidth: 1
+  }]
+};
+
+const config = {
+  type: 'doughnut',
+  data: data,
+  options: {
+    rotation: -90, // Start the chart at the top center
+    circumference: 180, // Display only half of the circle
+    cutout: '70%', // Adjust the cutout size as needed for the doughnut hole
+    plugins: {
+      legend: {
+        display: false // Hide the legend if not needed
+      },
+      tooltip: {
+        filter: function(tooltipItem) {
+          // Hide tooltip for the 'Hidden Padding' segment
+          return tooltipItem.label !== 'Hidden Padding';
+        }
+      }
+    }
+  }
+};
+
+// Assuming you have a canvas element with id 'myHalfDoughnutChart'
+const ctx = document.getElementById('qualityScoreChart').getContext('2d');
+const myHalfDoughnutChart = new Chart(ctx, config);
     </script>
  
 
