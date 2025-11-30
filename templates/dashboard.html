@@ -266,10 +266,13 @@ document.addEventListener("DOMContentLoaded", function() {
         data: {
             labels: ['Score', 'Empty'],
             datasets: [{
-                data: [75, 25],
+                data: [quality_score, 100 - quality_score],
                 // 3. Assign the gradient variable here
                 backgroundColor: [gradient, '#111111'], 
-                borderWidth: 0
+                borderWidth: 0,
+                
+                // Add this property
+                borderRadius: 2
             }]
         },
         options: {
