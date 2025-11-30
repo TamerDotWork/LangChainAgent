@@ -931,12 +931,14 @@ span#missing-val,span#duplicates-val ,#outlier-val, #pair-val {
     width: 95%;
 }
 table#dataTable td {
-    color: #666;
+    color: #333;
     padding: 12px;
 }
 table#dataTable th {
-    color: #333;
-    padding: 12px;
+    color: #666;
+    padding: 0px 12px 12px 12px;
+    font-size: 1.2rem;
+    font-weight: normal;
 }
 table#dataTable {
     width: 100%;
