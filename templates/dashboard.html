@@ -112,7 +112,7 @@ Config</a></li>
         <div class="card-dark">
         <div class="head"><div class="title">Total Quality Score</div></div>
             <div class="chart">
-                <div>
+                <div class="qualityScoreChart"> 
                 <canvas id="qualityScoreChart" height="50"></canvas>
 
                 </div>
@@ -142,14 +142,14 @@ Config</a></li>
 <div class="col6">
     <div class="card">
 <div class="head"><div class="title">Duplicate rows</div><div class="legend"><span id="duplicates-val"></span> Rows</div></div>
-            <div class="chart"><canvas id="duplicateChart" height="50"></canvas></div>
+            <div class="chart"><div class="duplicateChart"><canvas id="duplicateChart" height="50"></canvas></div></div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
 <div class="col6">
     <div class="card">
 <div class="head"><div class="title">Missing values</div><div class="legend"><span id="missing-val"></span> Cols</div></div>
-    <div class="chart "><canvas id="missingChart" height="50"></canvas></div>
+    <div class="chart "><div class="missingChart"><canvas id="missingChart" height="50"></canvas></div></div>
             <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
         </div>
 </div>
@@ -377,7 +377,7 @@ document.addEventListener("DOMContentLoaded", function() {
  
     }
     else{
-        $("#missingChart").html("<h3>No Missing Values</h3>");
+        $(".missingChart").html("<h3>No Missing Values</h3>");
     }
 
 });
