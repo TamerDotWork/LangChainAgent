@@ -236,16 +236,16 @@ Config</a></li>
              
             console.log(data);  
             $("#most_frequent_type").html(data.most_frequent_dtype);
-            $("#missing-val").html(scans.missing.total_missing);
-            $("#duplicates-val").html(scans.duplicates.duplicate_count);
+            $("#missing-val").html(data.missing_count);
+            $("#duplicates-val").html(data.duplicate_count);
             $("#row_count").html(data.row_count);
             $("#column_count").html(data.column_count); 
             $("#dataset_name").html(data.dataset_name);
 
 
-            $("#normalization-val").html(scans.invalid.total_invalid);
-            $("#pii-val").html(scans.invalid.total_invalid);
-            $("#invalid-val").html(scans.invalid.total_invalid);
+        
+            $("#pii-val").html(data.pii_fields);
+            $("#invalid-val").html(data.invalid_fields);
              
             console.log(data);  
   

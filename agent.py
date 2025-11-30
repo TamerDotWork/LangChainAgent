@@ -125,6 +125,8 @@ def api():
 
             # ---- Return in JSON (example integrating with previous analysis) ----
             return jsonify({
+                "dataset_name": file.filename,
+
                 "row_count": int(df.shape[0]),
                 "column_count": int(df.shape[1]),
                 "most_frequent_dtype": most_frequent_dtype,
