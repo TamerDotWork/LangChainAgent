@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Half Doughnut Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container { width: 400px; margin: 50px auto; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed', 'Remaining'],
+                datasets: [{
+                    data: [75, 25], // Your data here
+                    backgroundColor: ['#36A2EB', '#E0E0E0'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                // THIS IS THE MAGIC PART
+                rotation: -90,
+                circumference: 180, 
+                cutout: '70%', // Thickness of the ring
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
