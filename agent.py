@@ -26,5 +26,10 @@ def dashboard():
 def upload():
     return jsonify({'status': 'success', 'message': 'File processed successfully'})
 
+# Route 3: The API to Process the file
+@app.route('/api', methods=['GET'])
+def upload():
+    return jsonify({'status': 'success', 'message': 'File processed successfully'})
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5006, debug=True)
