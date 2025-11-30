@@ -143,7 +143,7 @@ def api():
  
     
         return jsonify({
-            "quality_score": round(score, 0),
+            "quality_score":int(round(score, 0)),
             "dataset_name": file.filename,
 
             "row_count": int(df.shape[0]),
