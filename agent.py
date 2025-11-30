@@ -64,7 +64,11 @@ def api():
     return jsonify({
         "row_count": df.shape[0],
         "column_count": df.shape[1],
-        
+        "most_frequent_dtype": str(most_frequent_type),
+        "missing_count": missing_count,
+
+        "pii_fields": pii_fields,
+        "invalid_fields": invalid_fields,
 
     })
     return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
