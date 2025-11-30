@@ -35,43 +35,41 @@ def api():
     df = pd.read_csv(dataset)
 
     dtype_counts = df.dtypes.value_counts()
-    most_frequent_type = dtype_counts.idxmax().name if hasattr(dtype_counts.idxmax(), 'name') else str(dtype_counts.idxmax())
+    most_frequent_dtype = dtype_counts.idxmax().name if hasattr(dtype_counts.idxmax(), 'name') else str(dtype_counts.idxmax())
 
     # ---- Invalid fields ----
     invalid_fields = {}
     missing_count = 0
+
+    
     for col in df.columns:
-        # Missing values
-        missing_count += df[col].isna().sum()
-        
+        missing_count += int(df[col].isna().sum())  # convert to Python int
+
         non_numeric_invalid = 0
-        # Try detect non-numeric in numeric columns
         if pd.api.types.is_numeric_dtype(df[col]):
-            non_numeric_invalid = df[col].apply(lambda x: isinstance(x, str)).sum()
+            non_numeric_invalid = int(df[col].apply(lambda x: isinstance(x, str)).sum())  # convert to int
 
-        invalid_fields[col] = int(non_numeric_invalid)
+        invalid_fields[col] = non_numeric_invalid
 
-    # ---- PII Detection (Basic) ----
+    # ---- PII Detection ----
     pii_keywords = ["name", "email", "phone", "address", "id", "ssn"]
     pii_fields = [
         col for col in df.columns
         if any(keyword in col.lower() for keyword in pii_keywords)
     ]
 
-     # ---- Duplicate Rows ----
+    # ---- Duplicate Rows ----
     duplicate_rows = df[df.duplicated()]
-    duplicate_count = duplicate_rows.shape[0]
+    duplicate_count = int(duplicate_rows.shape[0])  # ensure int type
 
     return jsonify({
-        "row_count": df.shape[0],
-        "column_count": df.shape[1],
-        "most_frequent_dtype": str(most_frequent_type),
+        "row_count": int(df.shape[0]),
+        "column_count": int(df.shape[1]),
+        "most_frequent_dtype": most_frequent_dtype,
         "duplicate_count": duplicate_count,
-        "missing_count": missing_count,
-
+        "missing_count": int(missing_count),
         "pii_fields": pii_fields,
-        "invalid_fields": invalid_fields,
-
+        "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()}
     })
     return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
 
