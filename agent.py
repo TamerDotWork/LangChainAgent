@@ -38,10 +38,11 @@ def api():
     most_frequent_dtype = dtype_counts.idxmax().name if hasattr(dtype_counts.idxmax(), 'name') else str(dtype_counts.idxmax())
 
     # ---- Invalid fields ----
-    invalid_fields = {}
+ 
     missing_count = 0
 
-    
+    invalid_fields_count = 0
+
     for col in df.columns:
         # Count missing values
         invalid_fields_count += int(df[col].isna().sum())
