@@ -159,7 +159,7 @@ Config</a></li>
     <div class="col12">
 <div class="col6">
     <div class="card">
-<div class="head"><div class="title">Distribution</div><div class="legend">555 Cols</div></div>
+<div class="head"><div class="title">Distribution</div><div class="legend"><span id="outlier-val"></span> Outlier</div></div>
     <div class="chart">
     <canvas id="skewnessChart" ></canvas>
     </div>
@@ -168,7 +168,7 @@ Config</a></li>
 </div>
 <div class="col6">
     <div class="card">
-<div class="head"><div class="title">Correlation</div><div class="legend">555 Cols</div></div>
+<div class="head"><div class="title">Correlation</div><div class="legend"><span id="pair-val"></span> Cols</div></div>
     <div class="chart">
     <canvas id="correlationHeatmap"  ></canvas>
 
@@ -240,6 +240,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#row_count").html(data.row_count);
     $("#column_count").html(data.column_count); 
     $("#dataset_name").html(data.dataset_name);
+    $("#outlier-val").html(data.outliers.length > 0 ? data.outliers.length : 0);
  
     $("#pii-val").html(data.pii_fields.length > 0 ? data.pii_fields.length : 0);
     $("#invalid-val").html(data.invalid_fields.length > 0 ? data.invalid_fields.length : 0);
