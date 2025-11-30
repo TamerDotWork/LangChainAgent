@@ -36,6 +36,7 @@ def api():
 
     dtype_counts = df.dtypes.value_counts()
     most_frequent_type = dtype_counts.idxmax().name if hasattr(dtype_counts.idxmax(), 'name') else str(dtype_counts.idxmax())
+
     # ---- Invalid fields ----
     invalid_fields = {}
     for col in df.columns:
@@ -55,10 +56,11 @@ def api():
         col for col in df.columns
         if any(keyword in col.lower() for keyword in pii_keywords)
     ]
+
      # ---- Duplicate Rows ----
     duplicate_rows = df[df.duplicated()]
-    duplicate_count = duplicate_rows.shape[0]
-    
+    duplicate_count = duplicate_rows.shape[0].sum()
+
     return jsonify({
         "row_count": df.shape[0],
         "column_count": df.shape[1],
