@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", function() {
     missingChartgradient.addColorStop((data.missing_count / 100)/2, '#dfeb8c');  // Pink (End)
     missingChartgradient.addColorStop(1, '#75d8b8');  // Pink (End)
      // 2. Define the "Center Text" Plugin
-    const gaugeTextPlugin = {
+    const ggaugeTextPlugin = {
         id: 'gaugeText',
         beforeDraw(chart) {
             const { missingChartctx, chartArea: { top, bottom, left, right, width, height } } = chart;
@@ -371,6 +371,8 @@ document.addEventListener("DOMContentLoaded", function() {
             cutout: '70%',
             plugins: { legend: { display: false }, tooltip: { enabled: false } }
         },
+          // 3. Register the plugin here
+        plugins: [ggaugeTextPlugin]
  
     });
  
