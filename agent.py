@@ -11,6 +11,8 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
+dataset = "data.csv"
+
 # Route 1: The Upload Page
 @app.route('/', methods=['GET'])
 def index():
@@ -29,7 +31,7 @@ def upload():
 # Route 3: The API to Process the file
 @app.route('/api', methods=['GET'])
 def api():
-    return jsonify({'status': 'success', 'message': 'File processed successfully'})
+    return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5006, debug=True)
