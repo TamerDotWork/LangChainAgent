@@ -63,13 +63,7 @@ def api():
     duplicate_count = int(duplicate_rows.shape[0])  # ensure int type
 
     return jsonify({
-        "row_count": int(df.shape[0]),
-        "most_frequent_dtype": most_frequent_dtype,        
-        "column_count": int(df.shape[1]),
-        "duplicate_count": duplicate_count,
-        "missing_count": int(missing_count),
-        "pii_fields": pii_fields,
-        "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()}
+        
     })
     return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
 
