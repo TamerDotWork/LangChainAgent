@@ -315,9 +315,9 @@ document.addEventListener("DOMContentLoaded", function() {
     /*Missing values*/
     if( data.missing_count!=0){
         
+
     const missingChartcanvas = document.getElementById('missingChart');
     const missingChartctx = missingChartcanvas.getContext('2d');
-
     // 1. Create the gradient (x0, y0, x1, y1)
     // This creates a gradient from Left to Right
     const missingChartgradient = missingChartctx.createLinearGradient(0, 0, 400, 0);
@@ -326,38 +326,15 @@ document.addEventListener("DOMContentLoaded", function() {
     missingChartgradient.addColorStop(0, '#f371c8');  // Red (Start)
     missingChartgradient.addColorStop((data.missing_count / 100)/2, '#dfeb8c');  // Pink (End)
     missingChartgradient.addColorStop(1, '#75d8b8');  // Pink (End)
-    // 2. Define the "Center Text" Plugin
-    const missingChartgaugeTextPlugin = {
-        id: 'gaugeText',
-        beforeDraw(chart) {
-            const { missingChartctx, chartArea: { top, bottom, left, right, width, height } } = chart;
-            
-            missingChartctx.save();
-            // Styling
-            missingChartctx.font = 'bold 30px sans-serif';
-            missingChartctx.fillStyle = '#fff';
-            missingChartctx.textAlign = 'center';
-            missingChartctx.textBaseline = 'middle';
-
-            // Get value dynamically from the dataset
-            const value = chart.data.datasets[0].data[0] + '%';
-            
-            // Position: Center X, and slightly up from the bottom for a gauge feel
-            const x = width / 2;
-            const y = chart.chartArea.bottom - 80; // Adjust '40' to move up/down
-            
-            missingChartctx.fillText(value, x, y);
-            missingChartctx.restore();
-        }
-    };
+ 
     new Chart(missingChartctx, {
         type: 'doughnut',
         data: {
             labels: ['Score', 'Empty'],
             datasets: [{
-                data: [data.missing_count, 100 - data.missing_count],
+                data: [data.duplicate_count, 100 - data.duplicate_count],
                 // 3. Assign the gradient variable here
-                backgroundColor: [gradient, '#333333'], 
+                backgroundColor: [missingChartgradient, '#333333'], 
                 borderWidth: 0,
                 
                 // Add this property
@@ -371,9 +348,9 @@ document.addEventListener("DOMContentLoaded", function() {
             cutout: '70%',
             plugins: { legend: { display: false }, tooltip: { enabled: false } }
         },
-        // 3. Register the plugin here
-        plugins: [missingChartgaugeTextPlugin]
+ 
     });
+ 
  
     }
     else{
