@@ -268,17 +268,17 @@ document.addEventListener("DOMContentLoaded", function() {
             
             ctx.save();
             // Styling
- 
+            ctx.font = 'bold 30px sans-serif';
             ctx.fillStyle = '#fff';
             ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
+            ctx.textBaseline = 'middle';
 
             // Get value dynamically from the dataset
             const value = chart.data.datasets[0].data[0] + '%';
             
             // Position: Center X, and slightly up from the bottom for a gauge feel
             const x = width / 2;
-            const y = chart.chartArea.bottom - 40; // Adjust '40' to move up/down
+            const y = chart.chartArea.bottom - 440; // Adjust '40' to move up/down
             
             ctx.fillText(value, x, y);
             ctx.restore();
