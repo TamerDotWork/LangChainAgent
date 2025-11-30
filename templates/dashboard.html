@@ -241,6 +241,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#column_count").html(data.column_count); 
     $("#dataset_name").html(data.dataset_name);
     $("#outlier-val").html(data.outliers.length > 0 ? data.outliers.length : 0);
+    $("#pair-val").html(data.correlation.length > 0 ? data.correlation.length : 0);
  
     $("#pii-val").html(data.pii_fields.length > 0 ? data.pii_fields.length : 0);
     $("#invalid-val").html(data.invalid_fields.length > 0 ? data.invalid_fields.length : 0);
