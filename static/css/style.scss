@@ -924,4 +924,9 @@ span#missing-val,span#duplicates-val {
     /* padding: 0 90px 0 90px; */
     width: 60%;
     margin: auto;
+}h2#dataset_name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 95%;
 }
