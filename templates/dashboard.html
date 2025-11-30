@@ -290,7 +290,18 @@ const minimalOptions = {
     cutout: '70%'
 };
 
- 
+// Quality Score Doughnut
+new Chart(document.getElementById("qualityScoreChart"), {
+    type: 'doughnut',
+    data: {
+        labels: ['Score', 'Remaining'],
+        datasets: [{
+            data: [totalQualityScore, 100 - totalQualityScore],
+            backgroundColor: ['#28a745', '#e9ecef']
+        }]
+    },
+    options: minimalOptions
+});
 
 // Duplicate Rows Doughnut
 new Chart(document.getElementById("duplicateChart"), {
@@ -322,20 +333,9 @@ new Chart(document.getElementById("missingChart"), {
  
         });
 
-// Source - https://stackoverflow.com/q
-// Posted by Nick
-// Retrieved 2025-11-30, License - CC BY-SA 4.0
+ 
 
-var ctx = document.getElementById("qualityScoreChart");
-    var dashboardChart = new Chart(ctx, {
-  type: 'doughnut',
-  data: ['400', '200'],
-  options: {
-    rotation: -90,
-    circumference: 180,
-  }
-});
-
+ 
     </script>
  
 
