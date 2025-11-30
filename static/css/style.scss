@@ -922,7 +922,7 @@ span#missing-val,span#duplicates-val ,#outlier-val, #pair-val {
 
 #qualityScoreChart {
     /* padding: 0 90px 0 90px; */
-    width: 60%;
+    width: 60%!important;
     margin: auto;
 }h2#dataset_name {
     white-space: nowrap;
@@ -946,5 +946,5 @@ table#dataTable {
 }
 #missingChart,#duplicateChart {
      margin: auto;
-    width: 60%;
+    width: 60%!important
 }
