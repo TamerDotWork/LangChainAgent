@@ -326,30 +326,7 @@ document.addEventListener("DOMContentLoaded", function() {
     missingChartgradient.addColorStop(0, '#f371c8');  // Red (Start)
     missingChartgradient.addColorStop((data.missing_count / 100)/2, '#dfeb8c');  // Pink (End)
     missingChartgradient.addColorStop(1, '#75d8b8');  // Pink (End)
-     // 2. Define the "Center Text" Plugin
-    const gaugeTextPlugin = {
-        id: 'gaugeText',
-        beforeDraw(chart) {
-            const { missingChartctx, chartArea: { top, bottom, left, right, width, height } } = chart;
-            
-            missingChartctx.save();
-            // Styling
-            missingChartctx.font = 'bold 30px sans-serif';
-            missingChartctx.fillStyle = '#fff';
-            missingChartctx.textAlign = 'center';
-            missingChartctx.textBaseline = 'middle';
-
-            // Get value dynamically from the dataset
-            const value = chart.data.datasets[0].data[0] + '%';
-            
-            // Position: Center X, and slightly up from the bottom for a gauge feel
-            const x = width / 2;
-            const y = chart.chartArea.bottom - 80; // Adjust '40' to move up/down
-            
-            missingChartctx.fillText(value, x, y);
-            missingChartctx.restore();
-        }
-    };
+     
     new Chart(missingChartctx, {
         type: 'doughnut',
         data: {
