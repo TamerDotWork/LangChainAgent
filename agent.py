@@ -59,13 +59,12 @@ def api():
 
      # ---- Duplicate Rows ----
     duplicate_rows = df[df.duplicated()]
-    duplicate_count = duplicate_rows.shape[0].sum()
+    duplicate_count = duplicate_rows.shape[0]
 
     return jsonify({
         "row_count": df.shape[0],
         "column_count": df.shape[1],
-        "most_frequent_type": most_frequent_type,
-        "duplicate_count": duplicate_count,
+        "most_frequent_dtype": str(most_frequent_type),
         "missing_count": missing_count,
 
         "pii_fields": pii_fields,
