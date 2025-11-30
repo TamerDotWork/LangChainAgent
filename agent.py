@@ -86,9 +86,11 @@ def api():
         }
         
         # Outliers (using Z-score threshold > 3)
-        if len(col_data) > 1:  # avoid single-value columns
+        if len(col_data) > 1:
             z_scores = np.abs(zscore(col_data))
-            outliers[col] = int((z_scores > 3).sum())
+            outlier_count = int((z_scores > 3).sum())
+            if outlier_count > 0:  # include only if there are outliers
+                outliers[col] = outlier_count
 
     return jsonify({
         "row_count": int(df.shape[0]),
