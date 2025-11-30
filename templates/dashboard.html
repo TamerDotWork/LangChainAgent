@@ -133,7 +133,7 @@ Config</a></li>
 <div class="col8">
     <div class="card">
     <div class="head"><div class="title">Preview</div><div class="legend">555 Cols</div></div>
-    <div class="chart"></div>
+    <div class="chart"><table id="dataTable"></table></div>
     <div class="foot"><div class="note">Normalization</div><div class="action"><a href="#" class="tag high">High</a></div></div>
     </div>
 </div>
@@ -404,6 +404,46 @@ document.addEventListener("DOMContentLoaded", function() {
         $(".duplicateChart").html("<h3>No Duplicate Values</h3>");
     }
 
+
+    const $table = $('#dataTable');
+
+            // 1. Get the column headers from the first object
+            if (data.preview.length > 0) {
+                const headers = Object.keys(data.preview[0]);
+                // 2. Create the Table Header (<thead>)
+                let headerRow = '<thead><tr>';
+                headers.forEach(function(header) {
+                    // Normalize header text for better readability
+                    let displayHeader = header.replace(/([A-Z])/g, ' $1').trim();
+                    headerRow += `<th>${displayHeader}</th>`;
+                });
+                headerRow += '</tr></thead>';
+                $table.append(headerRow);
+
+                // 3. Create the Table Body (<tbody>) and populate rows
+                let tableBody = '<tbody>';
+                stockData.forEach(function(rowData) {
+                    let row = '<tr>';
+                    // Iterate over values in the correct column order
+                    headers.forEach(function(key) {
+                        let value = rowData[key];
+                        // Format numbers for better display (optional)
+                        if (typeof value === 'number' && key !== 'Volume') {
+                            value = value.toFixed(4); // Display prices with 4 decimal places
+                        }
+                        // Format Volume for better display (optional)
+                        if (key === 'Volume') {
+                            // Using toLocaleString for comma separation on large numbers
+                            value = value.toLocaleString();
+                        }
+                        row += `<td>${value}</td>`;
+                    });
+                    row += '</tr>';
+                    tableBody += row;
+                });
+                tableBody += '</tbody>';
+                $table.append(tableBody);
+            }
 });
 
 
