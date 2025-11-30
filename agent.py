@@ -151,6 +151,7 @@ def api():
             "most_frequent_dtype": most_frequent_dtype,
 
             "missing_count": int(missing_count),
+            "duplicate_count": int(duplicate_count),
             "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
             "pii_fields": pii_fields,
             "distribution": distribution,
