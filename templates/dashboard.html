@@ -313,6 +313,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     /*Missing values*/
+    if( data.missing_count!=0){
+        
     const missingChartcanvas = document.getElementById('missingChart');
     const missingChartctx = missingChartcanvas.getContext('2d');
 
@@ -322,7 +324,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // 2. Define color stops (0 = start, 1 = end)
     missingChartgradient.addColorStop(0, '#f371c8');  // Red (Start)
-    missingChartgradient.addColorStop((data.quality_score / 100)/2, '#dfeb8c');  // Pink (End)
+    missingChartgradient.addColorStop((data.missing_count / 100)/2, '#dfeb8c');  // Pink (End)
     missingChartgradient.addColorStop(1, '#75d8b8');  // Pink (End)
     // 2. Define the "Center Text" Plugin
     const missingChartgaugeTextPlugin = {
@@ -353,7 +355,7 @@ document.addEventListener("DOMContentLoaded", function() {
         data: {
             labels: ['Score', 'Empty'],
             datasets: [{
-                data: [data.quality_score, 100 - data.quality_score],
+                data: [data.missing_count, 100 - data.missing_count],
                 // 3. Assign the gradient variable here
                 backgroundColor: [gradient, '#111111'], 
                 borderWidth: 0,
@@ -372,6 +374,8 @@ document.addEventListener("DOMContentLoaded", function() {
         // 3. Register the plugin here
         plugins: [missingChartgaugeTextPlugin]
     });
+ 
+    }
 
 });
 
