@@ -92,18 +92,34 @@ def api():
             if outlier_count > 0:  # include only if there are outliers
                 outliers[col] = outlier_count
 
-    return jsonify({
-        "row_count": int(df.shape[0]),
-        "column_count": int(df.shape[1]),
-        "most_frequent_dtype": most_frequent_dtype,
-        "duplicate_count": duplicate_count,
-        "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
-        "pii_fields": pii_fields,
-        "distribution": distribution,
-        "outliers": outliers
-    })
+        # ---- Correlation ----
+        correlation_threshold = 0.5  # only return correlations above this
+        correlation = {}
 
-    return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
+        if len(numeric_cols) > 1:
+            corr_matrix = df[numeric_cols].corr(method='pearson')
+            # Iterate upper triangle to avoid duplicate pairs
+            for i, col1 in enumerate(corr_matrix.columns):
+                for j, col2 in enumerate(corr_matrix.columns):
+                    if j > i:  # upper triangle
+                        corr_value = float(corr_matrix.iloc[i, j])
+                        if abs(corr_value) >= correlation_threshold:
+                            pair_name = f"{col1}__{col2}"
+                            correlation[pair_name] = corr_value
 
+        # ---- Return in JSON (example integrating with previous analysis) ----
+        return jsonify({
+            "row_count": int(df.shape[0]),
+            "column_count": int(df.shape[1]),
+            "most_frequent_dtype": most_frequent_dtype,
+            "duplicate_count": duplicate_count,
+            "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
+            "pii_fields": pii_fields,
+            "distribution": distribution,
+            "outliers": outliers,
+            "correlation": correlation
+        })
+
+ 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5006, debug=True)
