@@ -34,22 +34,24 @@ def api():
      
     df = pd.read_csv(dataset)
 
+    # ---- Most frequent dtype ----
     dtype_counts = df.dtypes.value_counts()
-    most_frequent_dtype = dtype_counts.idxmax().name if hasattr(dtype_counts.idxmax(), 'name') else str(dtype_counts.idxmax())
+    most_frequent_dtype = str(dtype_counts.index[0]) if len(dtype_counts) > 0 else None
 
-    # ---- Invalid fields ----
- 
-    missing_count = 0
-
-    invalid_fields_count = 0
-
+    # ---- Invalid fields per column (only include if count > 0) ----
+    invalid_fields = {}
     for col in df.columns:
-        # Count missing values
-        invalid_fields_count += int(df[col].isna().sum())
-
-        # Count non-numeric values in numeric fields
+        # Missing values
+        missing_count = int(df[col].isna().sum())
+        
+        # Non-numeric in numeric columns
+        non_numeric_invalid = 0
         if pd.api.types.is_numeric_dtype(df[col]):
-            invalid_fields_count += int(df[col].apply(lambda x: isinstance(x, str)).sum())
+            non_numeric_invalid = int(df[col].apply(lambda x: isinstance(x, str)).sum())
+        
+        total_invalid = missing_count + non_numeric_invalid
+        if total_invalid > 0:
+            invalid_fields[col] = total_invalid
 
     # ---- PII Detection ----
     pii_keywords = ["name", "email", "phone", "address", "id", "ssn"]
@@ -59,18 +61,17 @@ def api():
     ]
 
     # ---- Duplicate Rows ----
-    duplicate_rows = df[df.duplicated()]
-    duplicate_count = int(duplicate_rows.shape[0])  # ensure int type
+    duplicate_count = int(df.duplicated().sum())
 
     return jsonify({
         "row_count": int(df.shape[0]),
-        "most_frequent_dtype": most_frequent_dtype,        
         "column_count": int(df.shape[1]),
+        "most_frequent_dtype": most_frequent_dtype,
         "duplicate_count": duplicate_count,
-        "missing_count": int(missing_count),
+        "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
         "pii_fields": pii_fields,
-        "invalid_fields": int(invalid_fields_count),
     })
+
     return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
 
 if __name__ == '__main__':
