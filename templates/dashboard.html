@@ -332,7 +332,7 @@ document.addEventListener("DOMContentLoaded", function() {
         data: {
             labels: ['Score', 'Empty'],
             datasets: [{
-                data: [data.duplicate_count, 100 - data.duplicate_count],
+                data: [data.missing_count, 100 - data.missing_count],
                 // 3. Assign the gradient variable here
                 backgroundColor: [missingChartgradient, '#333333'], 
                 borderWidth: 0,
