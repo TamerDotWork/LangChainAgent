@@ -930,3 +930,15 @@ span#missing-val,span#duplicates-val ,#outlier-val, #pair-val {
     text-overflow: ellipsis;
     width: 95%;
 }
+table#dataTable td {
+    color: #666;
+    padding: 12px;
+}
+table#dataTable th {
+    color: #333;
+    padding: 12px;
+}
+table#dataTable {
+    width: 100%;
+    /* height: 100%; */
+}
