@@ -275,7 +275,7 @@ document.addEventListener("DOMContentLoaded", function() {
             ctx.textBaseline = 'middle';
 
             // Get value dynamically from the dataset
-            const value = chart.data.datasets[0].data[0] + '%';
+            const value = toFixed(chart.data.datasets[0].data[0]) + '%';
             
             // Position: Center X, and slightly up from the bottom for a gauge feel
             const x = width / 2;
