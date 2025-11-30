@@ -1,41 +1,165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Half Doughnut Chart</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merged Multi-Axis Bell Distribution Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
-        .chart-container { width: 400px; margin: 50px auto; text-align: center; }
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        #chartContainer {
+            width: 90%;
+            max-width: 1000px;
+            height: 600px; /* Added fixed height for multi-axis readability */
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
-    <div class="chart-container">
-        <canvas id="myChart"></canvas>
+
+    <div id="chartContainer">
+        <canvas id="bellDistributionChart"></canvas>
     </div>
 
     <script>
-        const ctx = document.getElementById('myChart');
-
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Completed', 'Remaining'],
-                datasets: [{
-                    data: [75, 25], // Your data here
-                    backgroundColor: ['#36A2EB', '#E0E0E0'],
-                    borderWidth: 0
-                }]
+        // --- 1. Distribution Statistics Object ---
+        const distributionStats = {
+            "Age": {
+                "mean": 44.29,
+                "std": 15.08,
+                "color": 'rgba(255, 99, 132, 1)' // Red
             },
-            options: {
-                responsive: true,
-                // THIS IS THE MAGIC PART
-                rotation: -90,
-                circumference: 180, 
-                cutout: '70%', // Thickness of the ring
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: false }
-                }
+            "Credit_History_Length": {
+                "mean": 14.67,
+                "std": 8.43,
+                "color": 'rgba(54, 162, 235, 1)' // Blue
+            },
+            "Credit_Score": {
+                "mean": 565.77,
+                "std": 155.86,
+                "color": 'rgba(255, 206, 86, 1)' // Yellow
+            },
+            "Employment_Years": {
+                "mean": 19.68,
+                "std": 11.27,
+                "color": 'rgba(75, 192, 192, 1)' // Green
+            },
+            "Loan_Amount": {
+                "mean": 28714.19,
+                "std": 12330.48,
+                "color": 'rgba(153, 102, 255, 1)' // Purple
             }
+        };
+
+        // --- 2. Utility Function to Generate Curve Points ---
+        function generateCurvePoints(mu, sigma, numPoints = 100) {
+            let xMin = mu - 3 * sigma;
+            let xMax = mu + 3 * sigma;
+            if (xMin < 0) { xMin = 0; } // Ensure non-negative start
+
+            const step = (xMax - xMin) / (numPoints - 1);
+            const data = [];
+            const constant = 1 / (sigma * Math.sqrt(2 * Math.PI));
+
+            for (let i = 0; i < numPoints; i++) {
+                const x = xMin + i * step;
+                const z = (x - mu) / sigma;
+                const y = constant * Math.exp(-0.5 * Math.pow(z, 2));
+
+                data.push({
+                    x: parseFloat(x.toFixed(2)),
+                    y: parseFloat(y.toFixed(6))
+                });
+            }
+            return data;
+        }
+
+        // --- 3. Main Chart Configuration Function ---
+        function createMultiAxisConfig() {
+            const datasets = [];
+            const scales = {
+                // Shared X-Axis (using a wide range to accommodate Loan_Amount)
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    title: { display: true, text: 'Feature Values (Scale Varies)' },
+                    min: 0,
+                    max: 50000 // Set max to accommodate Loan_Amount for visibility
+                }
+            };
+
+            const featureKeys = Object.keys(distributionStats);
+
+            featureKeys.forEach((key, index) => {
+                const stats = distributionStats[key];
+                const axisID = `y-axis-${index}`;
+                
+                // Generate data points for the feature
+                const dataPoints = generateCurvePoints(stats.mean, stats.std);
+                
+                // Add dataset
+                datasets.push({
+                    label: key.replace(/_/g, ' '),
+                    data: dataPoints,
+                    borderColor: stats.color,
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0,
+                    tension: 0.4,
+                    yAxisID: axisID // Link dataset to its unique Y-axis
+                });
+
+                // Add unique Y-axis scale definition
+                scales[axisID] = {
+                    type: 'linear',
+                    position: index % 2 === 0 ? 'left' : 'right', // Alternate position for clarity
+                    title: { display: true, text: key.replace(/_/g, ' ') },
+                    beginAtZero: true,
+                    // Hide axis lines and ticks to focus on the curve itself
+                    grid: { display: false }, 
+                    ticks: { color: stats.color }
+                };
+            });
+
+            return {
+                type: 'line',
+                data: { datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: scales,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Combined Bell Distributions (Multi-Axis Scale)',
+                            font: { size: 18 }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    }
+                }
+            };
+        }
+
+        // --- 4. Initialization ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('bellDistributionChart');
+            const config = createMultiAxisConfig();
+            
+            new Chart(ctx, config);
         });
     </script>
 </body>
