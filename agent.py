@@ -31,6 +31,12 @@ def upload():
 # Route 3: The API to Process the file
 @app.route('/api', methods=['GET'])
 def api():
+     
+    df = pd.read_csv(dataset)
+    return jsonify({
+        "row_count": df.shape[0],
+        "column_count": df.shape[1],
+    })
     return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
 
 if __name__ == '__main__':
