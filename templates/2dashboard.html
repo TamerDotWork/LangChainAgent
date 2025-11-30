@@ -232,11 +232,103 @@ Config</a></li>
             // }
 
             const data = JSON.parse(rawData);
- 
+            const scans = data.scans;
+            
+            $("#most_frequent_type").html(scans.schema.most_common_dtype.dtype);
+            $("#missing-val").html(scans.missing.total_missing);
+            $("#duplicates-val").html(scans.duplicates.duplicate_count);
+            $("#row_count").html(data.row_count);
+            $("#column_count").html(data.column_count); 
+            $("#dataset_name").html(data.dataset_name);
+
+
+            $("#normalization-val").html(scans.invalid.total_invalid);
+            $("#pii-val").html(scans.invalid.total_invalid);
+            $("#invalid-val").html(scans.invalid.total_invalid);
              
             console.log(data);  
  
-  
+ 
+ // Extract skewness
+const skewValues = data.scans.skewness.skew_values;
+const skewLabels = Object.keys(skewValues);
+const skewData = Object.values(skewValues);
+
+// Skewness chart
+new Chart(document.getElementById("skewnessChart"), {
+    type: 'bar',
+    data: {
+        labels: skewLabels,
+        datasets: [{
+            label: 'Skewness Value',
+            data: skewData,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+         plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+        },
+       scales: {
+            x: { display: false },
+            y: { display: false }
+        }
+    }
+});
+// Extract metrics dynamically
+const totalQualityScore = data.scans.quality_score.score;
+const duplicateRows = data.scans.duplicates.duplicate_count;
+const missingValues = data.scans.missing.total_missing;
+ 
+
+// Common doughnut options (minimal)
+const minimalOptions = {
+    responsive: true,
+    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+    cutout: '70%'
+};
+
+// Quality Score Doughnut
+new Chart(document.getElementById("qualityScoreChart"), {
+    type: 'doughnut',
+    data: {
+        labels: ['Score', 'Remaining'],
+        datasets: [{
+            data: [totalQualityScore, 100 - totalQualityScore],
+            backgroundColor: ['#28a745', '#e9ecef']
+        }]
+    },
+    options: minimalOptions
+});
+
+// Duplicate Rows Doughnut
+new Chart(document.getElementById("duplicateChart"), {
+    type: 'doughnut',
+    data: {
+        labels: ['Duplicates', 'Remaining'],
+        datasets: [{
+            data: [duplicateRows, data.row_count - duplicateRows], // total rows = 500
+            backgroundColor: ['#ffc107', '#e9ecef']
+        }]
+    },
+    options: minimalOptions
+});
+
+// Missing Values Doughnut
+new Chart(document.getElementById("missingChart"), {
+    type: 'doughnut',
+    data: {
+        labels: ['Missing', 'Remaining'],
+        datasets: [{
+            data: [missingValues, data.row_count - missingValues], // total rows = 500
+            backgroundColor: ['#dc3545', '#e9ecef']
+        }]
+    },
+    options: minimalOptions
+});
+
  
  
         });
@@ -247,7 +339,13 @@ Config</a></li>
     </script>
  
 
+
  
+<script>
+     
+
+   
+</script>
 
 </body>
 </html>

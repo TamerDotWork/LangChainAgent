@@ -5,14 +5,139 @@ import pandas as pd
 import numpy as np
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any, List, Callable
-from scipy.stats import zscore
+# Optional: Scipy for Z-Score outliers
+try:
+    from scipy.stats import zscore
+except ImportError:
+    zscore = None
 
 from flask import Flask, render_template, request, jsonify
 
 
 app = Flask(__name__)
 
-dataset = "data.csv"
+
+ 
+
+# Route 3: The API to Process the file
+@app.route('/api', methods=['GET'])
+def api():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+        
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    try:
+        # Read file into Pandas
+        if file.filename.endswith('.csv'):
+            # Convert to string buffer for robust CSV reading
+            stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+            df = pd.read_csv(stream)
+        elif file.filename.endswith('.json'):
+            df = pd.read_json(file)
+        else:
+            return jsonify({"error": "Unsupported file type. Please upload .csv or .json"}), 400
+        
+        # df = pd.read_csv(dataset)
+
+        # ---- Most frequent dtype ----
+        dtype_counts = df.dtypes.value_counts()
+        most_frequent_dtype = str(dtype_counts.index[0]) if len(dtype_counts) > 0 else None
+
+        # ---- Invalid fields per column (only include if count > 0) ----
+        invalid_fields = {}
+        for col in df.columns:
+            # Missing values
+            missing_count = int(df[col].isna().sum())
+            
+            # Non-numeric in numeric columns
+            non_numeric_invalid = 0
+            if pd.api.types.is_numeric_dtype(df[col]):
+                non_numeric_invalid = int(df[col].apply(lambda x: isinstance(x, str)).sum())
+            
+            total_invalid = missing_count + non_numeric_invalid
+            if total_invalid > 0:
+                invalid_fields[col] = total_invalid
+
+        # ---- PII Detection ----
+        pii_keywords = ["name", "email", "phone", "address", "id", "ssn"]
+        pii_fields = [
+            col for col in df.columns
+            if any(keyword in col.lower() for keyword in pii_keywords)
+        ]
+
+        # ---- Duplicate Rows ----
+        duplicate_count = int(df.duplicated().sum())
+
+
+        # ---- Distribution & Outliers ----
+        distribution = {}
+        outliers = {}
+
+        numeric_cols = df.select_dtypes(include=np.number).columns
+
+        for col in numeric_cols:
+            col_data = df[col].dropna()  # ignore NaNs for stats
+            # Distribution stats
+            distribution[col] = {
+                "mean": float(col_data.mean()),
+                "median": float(col_data.median()),
+                "min": float(col_data.min()),
+                "max": float(col_data.max()),
+                "std": float(col_data.std()),
+                "25%": float(col_data.quantile(0.25)),
+                "50%": float(col_data.quantile(0.5)),
+                "75%": float(col_data.quantile(0.75))
+            }
+            
+            # Outliers (using Z-score threshold > 3)
+            if len(col_data) > 1:
+                z_scores = np.abs(zscore(col_data))
+                outlier_count = int((z_scores > 3).sum())
+                if outlier_count > 0:  # include only if there are outliers
+                    outliers[col] = outlier_count
+
+            # ---- Correlation ----
+            correlation_threshold = 0.5  # only return correlations above this
+            correlation = {}
+
+            if len(numeric_cols) > 1:
+                corr_matrix = df[numeric_cols].corr(method='pearson')
+                # Iterate upper triangle to avoid duplicate pairs
+                for i, col1 in enumerate(corr_matrix.columns):
+                    for j, col2 in enumerate(corr_matrix.columns):
+                        if j > i:  # upper triangle
+                            corr_value = float(corr_matrix.iloc[i, j])
+                            if abs(corr_value) >= correlation_threshold:
+                                pair_name = f"{col1}__{col2}"
+                                correlation[pair_name] = corr_value
+
+            # ---- Return in JSON (example integrating with previous analysis) ----
+            return jsonify({
+                "row_count": int(df.shape[0]),
+                "column_count": int(df.shape[1]),
+                "most_frequent_dtype": most_frequent_dtype,
+                "duplicate_count": duplicate_count,
+                "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
+                "pii_fields": pii_fields,
+                "distribution": distribution,
+                "outliers": outliers,
+                "correlation": correlation
+            })
+    
+    except Exception as e:
+        return jsonify({"error": f"Processing failed: {str(e)}"}), 500
+    
+
+
+
+ 
+# ------------------------
+# Flask Application
+# ------------------------
+app = Flask(__name__)
 
 # Route 1: The Upload Page
 @app.route('/', methods=['GET'])
@@ -23,102 +148,6 @@ def index():
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
     return render_template('dashboard.html')
-
-# Route 3: The API to Process the file
-@app.route('/upload', methods=['POST'])
-def upload():
-    return jsonify({'status': 'success', 'message': 'File processed successfully'})
-
-# Route 3: The API to Process the file
-@app.route('/api', methods=['GET'])
-def api():
-     
-    df = pd.read_csv(dataset)
-
-    # ---- Most frequent dtype ----
-    dtype_counts = df.dtypes.value_counts()
-    most_frequent_dtype = str(dtype_counts.index[0]) if len(dtype_counts) > 0 else None
-
-    # ---- Invalid fields per column (only include if count > 0) ----
-    invalid_fields = {}
-    for col in df.columns:
-        # Missing values
-        missing_count = int(df[col].isna().sum())
-        
-        # Non-numeric in numeric columns
-        non_numeric_invalid = 0
-        if pd.api.types.is_numeric_dtype(df[col]):
-            non_numeric_invalid = int(df[col].apply(lambda x: isinstance(x, str)).sum())
-        
-        total_invalid = missing_count + non_numeric_invalid
-        if total_invalid > 0:
-            invalid_fields[col] = total_invalid
-
-    # ---- PII Detection ----
-    pii_keywords = ["name", "email", "phone", "address", "id", "ssn"]
-    pii_fields = [
-        col for col in df.columns
-        if any(keyword in col.lower() for keyword in pii_keywords)
-    ]
-
-    # ---- Duplicate Rows ----
-    duplicate_count = int(df.duplicated().sum())
-
-
-    # ---- Distribution & Outliers ----
-    distribution = {}
-    outliers = {}
-
-    numeric_cols = df.select_dtypes(include=np.number).columns
-
-    for col in numeric_cols:
-        col_data = df[col].dropna()  # ignore NaNs for stats
-        # Distribution stats
-        distribution[col] = {
-            "mean": float(col_data.mean()),
-            "median": float(col_data.median()),
-            "min": float(col_data.min()),
-            "max": float(col_data.max()),
-            "std": float(col_data.std()),
-            "25%": float(col_data.quantile(0.25)),
-            "50%": float(col_data.quantile(0.5)),
-            "75%": float(col_data.quantile(0.75))
-        }
-        
-        # Outliers (using Z-score threshold > 3)
-        if len(col_data) > 1:
-            z_scores = np.abs(zscore(col_data))
-            outlier_count = int((z_scores > 3).sum())
-            if outlier_count > 0:  # include only if there are outliers
-                outliers[col] = outlier_count
-
-        # ---- Correlation ----
-        correlation_threshold = 0.5  # only return correlations above this
-        correlation = {}
-
-        if len(numeric_cols) > 1:
-            corr_matrix = df[numeric_cols].corr(method='pearson')
-            # Iterate upper triangle to avoid duplicate pairs
-            for i, col1 in enumerate(corr_matrix.columns):
-                for j, col2 in enumerate(corr_matrix.columns):
-                    if j > i:  # upper triangle
-                        corr_value = float(corr_matrix.iloc[i, j])
-                        if abs(corr_value) >= correlation_threshold:
-                            pair_name = f"{col1}__{col2}"
-                            correlation[pair_name] = corr_value
-
-        # ---- Return in JSON (example integrating with previous analysis) ----
-        return jsonify({
-            "row_count": int(df.shape[0]),
-            "column_count": int(df.shape[1]),
-            "most_frequent_dtype": most_frequent_dtype,
-            "duplicate_count": duplicate_count,
-            "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
-            "pii_fields": pii_fields,
-            "distribution": distribution,
-            "outliers": outliers,
-            "correlation": correlation
-        })
 
  
 if __name__ == '__main__':
