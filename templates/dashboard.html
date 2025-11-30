@@ -218,43 +218,67 @@ Config</a></li>
 
  
 
-    <script src="static/js/jquery-3.6.0.min.js"></script>
-    <!-- Logic Script -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 1. Retrieve Data
-            const rawData = sessionStorage.getItem('dqResult');
-            
-            // if (!rawData) {
-            //     alert("No data found. Redirecting to upload.");
-            //     window.location.href = "/";
-            //     return;
-            // }
+<script src="static/js/jquery-3.6.0.min.js"></script>
+<!-- Logic Script -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Retrieve Data
+    const rawData = sessionStorage.getItem('dqResult');
+    
+    // if (!rawData) {
+    //     alert("No data found. Redirecting to upload.");
+    //     window.location.href = "/";
+    //     return;
+    // }
 
-            const data = JSON.parse(rawData);
+    const data = JSON.parse(rawData);
 
-            $("#most_frequent_type").html(data.most_frequent_dtype);
-            $("#missing-val").html(data.missing_count);
-            $("#duplicates-val").html(data.duplicate_count);
-            $("#row_count").html(data.row_count);
-            $("#column_count").html(data.column_count); 
-            $("#dataset_name").html(data.dataset_name);
+    $("#most_frequent_type").html(data.quality_score);
+    $("#most_frequent_type").html(data.most_frequent_dtype);
+    $("#missing-val").html(data.missing_count);
+    $("#duplicates-val").html(data.duplicate_count);
+    $("#row_count").html(data.row_count);
+    $("#column_count").html(data.column_count); 
+    $("#dataset_name").html(data.dataset_name);
 
 
+
+    $("#pii-val").html(data.pii_fields);
+    $("#invalid-val").html(data.invalid_fields);
         
-            $("#pii-val").html(data.pii_fields);
-            $("#invalid-val").html(data.invalid_fields);
-             
-            console.log(data);  
-  
- 
- 
+    console.log(data);  
+
+
+const ctx = document.getElementById('qualityScoreChart');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed', 'Remaining'],
+                datasets: [{
+                    data: [data.quality_score, 100 - data.quality_score], // Your data here
+                    backgroundColor: ['#36A2EB', '#E0E0E0'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                // THIS IS THE MAGIC PART
+                rotation: -90,
+                circumference: 180, 
+                cutout: '70%', // Thickness of the ring
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                }
+            }
         });
+});
 
- 
 
- 
-    </script>
+
+
+</script>
  
 
  
