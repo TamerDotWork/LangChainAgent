@@ -16,20 +16,10 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-dataset = "data.csv"
-
-# Route 1: The Upload Page
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html')
-
-# Route 2: The Dashboard Page (Frontend will redirect here)
-@app.route('/dashboard', methods=['GET'])
-def dashboard():
-    return render_template('dashboard.html')
+ 
 
 # Route 3: The API to Process the file
-@app.route('/api', methods=['GET'])
+@app.route('/api', methods=['POST'])
 def api():
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -137,7 +127,7 @@ def api():
                 "correlation": correlation
             })
         
-        
+
     except Exception as e:
         return jsonify({"error": f"Processing failed: {str(e)}"}), 500
     
