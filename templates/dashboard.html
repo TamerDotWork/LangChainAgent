@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", function() {
             datasets: [{
                 data: [data.quality_score, 100 - data.quality_score],
                 // 3. Assign the gradient variable here
-                backgroundColor: [gradient, '#0e0e0e'], 
+                backgroundColor: [gradient, '#1c1c1c'], 
                 borderWidth: 0,
                 
                 // Add this property
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", function() {
             datasets: [{
                 data: [data.missing_count, 100 - data.missing_count],
                 // 3. Assign the gradient variable here
-                backgroundColor: [missingChartgradient, '#0e0e0e'], 
+                backgroundColor: [missingChartgradient, '#1c1c1c'], 
                 borderWidth: 0,
                 
                 // Add this property
@@ -380,7 +380,7 @@ document.addEventListener("DOMContentLoaded", function() {
             datasets: [{
                 data: [(data.duplicate_count/data.row_count)*100, 100 - (data.duplicate_count/data.row_count)*100],
                 // 3. Assign the gradient variable here
-                backgroundColor: [duplicateChartgradient, '#0e0e0e'], 
+                backgroundColor: [duplicateChartgradient, '#1c1c1c'], 
                 borderWidth: 0,
                 
                 // Add this property
