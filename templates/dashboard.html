@@ -248,31 +248,38 @@ document.addEventListener("DOMContentLoaded", function() {
         
     console.log(data);  
 
+ 
 
-const ctx = document.getElementById('qualityScoreChart');
+    const canvas = document.getElementById('qualityScoreChart');
+    const ctx = canvas.getContext('2d');
 
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Completed', 'Remaining'],
-                datasets: [{
-                    data: [data.quality_score, 100 - data.quality_score], // Your data here
-                    backgroundColor: ['#36A2EB', '#E0E0E0'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                // THIS IS THE MAGIC PART
-                rotation: -90,
-                circumference: 180, 
-                cutout: '70%', // Thickness of the ring
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: false }
-                }
-            }
-        });
+    // 1. Create the gradient (x0, y0, x1, y1)
+    // This creates a gradient from Left to Right
+    const gradient = ctx.createLinearGradient(0, 0, 400, 0);
+    
+    // 2. Define color stops (0 = start, 1 = end)
+    gradient.addColorStop(0, '#f371c8');  // Red (Start)
+    gradient.addColorStop(1, '#75d8b8');  // Pink (End)
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Score', 'Empty'],
+            datasets: [{
+                data: [75, 25],
+                // 3. Assign the gradient variable here
+                backgroundColor: [gradient, '#111111'], 
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            rotation: -90,
+            circumference: 180,
+            cutout: '70%',
+            plugins: { legend: { display: false }, tooltip: { enabled: false } }
+        }
+    });
 });
 
 
