@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#pair-val").html(data.correlation.length > 0 ? data.correlation.length : 0);
  
     $("#pii-val").html(data.pii_fields.length > 0 ? data.pii_fields.length : 0);
-    $("#invalid-val").html(data.invalid_fields.length > 0 ? data.invalid_fields.length : 0);
+    $("#invalid-val").html(Object.values(data.invalid_fields).reduce((a, b) => a + b, 0));
         
     console.log(data);  
 
