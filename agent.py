@@ -39,9 +39,10 @@ def api():
 
     # ---- Invalid fields ----
     invalid_fields = {}
+    missing_count = 0
     for col in df.columns:
         # Missing values
-        missing_count = df[col].isna().sum()
+        missing_count += df[col].isna().sum()
         
         non_numeric_invalid = 0
         # Try detect non-numeric in numeric columns
@@ -65,6 +66,7 @@ def api():
         "row_count": df.shape[0],
         "column_count": df.shape[1],
         "most_frequent_dtype": str(most_frequent_type),
+        "duplicate_count": duplicate_count,
         "missing_count": missing_count,
 
         "pii_fields": pii_fields,
