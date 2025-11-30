@@ -259,20 +259,20 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // 2. Define color stops (0 = start, 1 = end)
     gradient.addColorStop(0, '#f371c8');  // Red (Start)
-    gradient.addColorStop(1, '#75d8b8');  // Pink (End)
+    gradient.addColorStop(data.quality_score / 10, '#75d8b8');  // Pink (End)
 
     new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Score', 'Empty'],
             datasets: [{
-                data: [quality_score, 100 - quality_score],
+                data: [data.quality_score, 100 - data.quality_score],
                 // 3. Assign the gradient variable here
                 backgroundColor: [gradient, '#111111'], 
                 borderWidth: 0,
                 
                 // Add this property
-                borderRadius: 2
+                borderRadius: 4
             }]
         },
         options: {
