@@ -43,13 +43,12 @@ def api():
 
     
     for col in df.columns:
-        missing_count += int(df[col].isna().sum())  # convert to Python int
+        # Count missing values
+        invalid_fields_count += int(df[col].isna().sum())
 
-        non_numeric_invalid = 0
+        # Count non-numeric values in numeric fields
         if pd.api.types.is_numeric_dtype(df[col]):
-            non_numeric_invalid = int(df[col].apply(lambda x: isinstance(x, str)).sum())  # convert to int
-
-        invalid_fields[col] = non_numeric_invalid
+            invalid_fields_count += int(df[col].apply(lambda x: isinstance(x, str)).sum())
 
     # ---- PII Detection ----
     pii_keywords = ["name", "email", "phone", "address", "id", "ssn"]
@@ -69,7 +68,7 @@ def api():
         "duplicate_count": duplicate_count,
         "missing_count": int(missing_count),
         "pii_fields": pii_fields,
-        "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()}
+        "invalid_fields": int(invalid_fields_count),
     })
     return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
 
