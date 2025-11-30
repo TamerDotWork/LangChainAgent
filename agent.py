@@ -12,6 +12,20 @@ except ImportError:
     zscore = None
 
 from flask import Flask, render_template, request, jsonify
+# ------------------------
+# Flask Application
+# ------------------------
+app = Flask(__name__)
+
+# Route 1: The Upload Page
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
+# Route 2: The Dashboard Page (Frontend will redirect here)
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    return render_template('dashboard.html')
 
 # Route 3: The API to Process the file
 @app.route('/api', methods=['POST'])
@@ -130,20 +144,7 @@ def api():
 
 
  
-# ------------------------
-# Flask Application
-# ------------------------
-app = Flask(__name__)
 
-# Route 1: The Upload Page
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html')
-
-# Route 2: The Dashboard Page (Frontend will redirect here)
-@app.route('/dashboard', methods=['GET'])
-def dashboard():
-    return render_template('dashboard.html')
 
  
 if __name__ == '__main__':
