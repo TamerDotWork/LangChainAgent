@@ -33,9 +33,13 @@ def upload():
 def api():
      
     df = pd.read_csv(dataset)
+
+    dtype_counts = df.dtypes.value_counts()
+    most_frequent_type = dtype_counts.idxmax().name if hasattr(dtype_counts.idxmax(), 'name') else str(dtype_counts.idxmax())
     return jsonify({
         "row_count": df.shape[0],
         "column_count": df.shape[1],
+        "most_frequent_type": most_frequent_type,
     })
     return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
 
