@@ -28,7 +28,7 @@ def upload():
 
 # Route 3: The API to Process the file
 @app.route('/api', methods=['GET'])
-def upload():
+def api():
     return jsonify({'status': 'success', 'message': 'File processed successfully'})
 
 if __name__ == '__main__':
