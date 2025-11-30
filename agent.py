@@ -149,7 +149,7 @@ def api():
             "row_count": int(df.shape[0]),
             "column_count": int(df.shape[1]),
             "most_frequent_dtype": most_frequent_dtype,
-            "preview": df.head(5),
+            "preview": df.head(5).to_dict(orient='records'),
 
             "missing_count": int(missing_count),
             "duplicate_count": int(duplicate_count),
