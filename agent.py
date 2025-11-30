@@ -13,11 +13,6 @@ except ImportError:
 
 from flask import Flask, render_template, request, jsonify
 
-
-app = Flask(__name__)
-
- 
-
 # Route 3: The API to Process the file
 @app.route('/api', methods=['POST'])
 def api():
