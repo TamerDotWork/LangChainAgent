@@ -123,21 +123,40 @@ def api():
                                 pair_name = f"{col1}__{col2}"
                                 correlation[pair_name] = corr_value
 
-            # ---- Return in JSON (example integrating with previous analysis) ----
-            return jsonify({
-                "dataset_name": file.filename,
+        total_cells = df.shape[0] * df.shape[1]
 
-                "row_count": int(df.shape[0]),
-                "column_count": int(df.shape[1]),
-                "most_frequent_dtype": most_frequent_dtype,
-                "duplicate_count": duplicate_count,
-                "missing_count": int(missing_count),
-                "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
-                "pii_fields": pii_fields,
-                "distribution": distribution,
-                "outliers": outliers,
-                "correlation": correlation
-            })
+        # ---- Missing / Invalid Fields Penalty ----
+        total_invalid = sum(invalid_fields.values())
+        invalid_penalty = total_invalid / total_cells  # fraction of invalid cells
+
+        # ---- Duplicate Rows Penalty ----
+        duplicate_penalty = duplicate_count / df.shape[0]  # fraction of duplicate rows
+
+        # ---- Outliers Penalty ----
+        total_outliers = sum(outliers.values())
+        outlier_penalty = total_outliers / total_cells  # fraction of outlier cells
+
+        # ---- Combine penalties to compute quality score ----
+        # Higher penalties → lower score, scale 0-100
+        score = 100 * (1 - (invalid_penalty + duplicate_penalty + outlier_penalty))
+        score = max(0, min(100, score))  # ensure between 0-100
+ 
+    
+        return jsonify({
+            "quality_score": round(score, 2),
+            "dataset_name": file.filename,
+
+            "row_count": int(df.shape[0]),
+            "column_count": int(df.shape[1]),
+            "most_frequent_dtype": most_frequent_dtype,
+
+            "missing_count": int(missing_count),
+            "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
+            "pii_fields": pii_fields,
+            "distribution": distribution,
+            "outliers": outliers,
+            "correlation": correlation
+        })
         
 
     except Exception as e:
