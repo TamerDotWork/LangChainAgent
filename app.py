@@ -427,8 +427,8 @@ def dashboard():
     return render_template('dashboard.html')
 
 # Route 3: The API to Process the file
-@app.route('/upload', methods=['POST'])
-def upload_file():
+@app.route('/api', methods=['POST'])
+def api():
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
     
