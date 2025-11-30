@@ -36,10 +36,31 @@ def api():
 
     dtype_counts = df.dtypes.value_counts()
     most_frequent_type = dtype_counts.idxmax().name if hasattr(dtype_counts.idxmax(), 'name') else str(dtype_counts.idxmax())
+    # ---- Invalid fields ----
+    invalid_fields = {}
+    for col in df.columns:
+        # Missing values
+        missing_count = df[col].isna().sum()
+        
+        non_numeric_invalid = 0
+        # Try detect non-numeric in numeric columns
+        if pd.api.types.is_numeric_dtype(df[col]):
+            non_numeric_invalid = df[col].apply(lambda x: isinstance(x, str)).sum()
+
+        invalid_fields[col] = int(missing_count + non_numeric_invalid)
+
+    # ---- PII Detection (Basic) ----
+    pii_keywords = ["name", "email", "phone", "address", "id", "ssn"]
+    pii_fields = [
+        col for col in df.columns
+        if any(keyword in col.lower() for keyword in pii_keywords)
+    ]
     return jsonify({
         "row_count": df.shape[0],
         "column_count": df.shape[1],
         "most_frequent_type": most_frequent_type,
+        "invalid_fields": invalid_fields,
+        "pii_fields": pii_fields,
     })
     return jsonify({'status': 'success', 'message': dataset.capitalize() + ' dataset loaded successfully'})
 
