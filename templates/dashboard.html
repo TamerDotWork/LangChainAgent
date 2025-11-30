@@ -290,18 +290,7 @@ const minimalOptions = {
     cutout: '70%'
 };
 
-// Quality Score Doughnut
-new Chart(document.getElementById("qualityScoreChart"), {
-    type: 'doughnut',
-    data: {
-        labels: ['Score', 'Remaining'],
-        datasets: [{
-            data: [totalQualityScore, 100 - totalQualityScore],
-            backgroundColor: ['#28a745', '#e9ecef']
-        }]
-    },
-    options: minimalOptions
-});
+ 
 
 // Duplicate Rows Doughnut
 new Chart(document.getElementById("duplicateChart"), {
