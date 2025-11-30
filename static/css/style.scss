@@ -908,7 +908,7 @@ height: 100%;
 span#invalid-val, span#pii-val,span#normalization-val,#row_count,#most_frequent_type,#column_count {
     font-size: 2rem;
 }
-span#missing-val,span#duplicates-val {
+span#missing-val,span#duplicates-val ,#outlier-val, #pair-val {
     font-size: 1.2rem;
     font-weight: 800;
 }
