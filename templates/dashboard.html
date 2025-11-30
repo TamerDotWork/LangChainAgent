@@ -260,7 +260,30 @@ document.addEventListener("DOMContentLoaded", function() {
     // 2. Define color stops (0 = start, 1 = end)
     gradient.addColorStop(0, '#f371c8');  // Red (Start)
     gradient.addColorStop(data.quality_score / 100, '#75d8b8');  // Pink (End)
+    // 2. Define the "Center Text" Plugin
+    const gaugeTextPlugin = {
+        id: 'gaugeText',
+        beforeDraw(chart) {
+            const { ctx, chartArea: { top, bottom, left, right, width, height } } = chart;
+            
+            ctx.save();
+            // Styling
+            ctx.font = 'bold 30px sans-serif';
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
 
+            // Get value dynamically from the dataset
+            const value = chart.data.datasets[0].data[0] + '%';
+            
+            // Position: Center X, and slightly up from the bottom for a gauge feel
+            const x = width / 2;
+            const y = chart.chartArea.bottom - 40; // Adjust '40' to move up/down
+            
+            ctx.fillText(value, x, y);
+            ctx.restore();
+        }
+    };
     new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -280,8 +303,10 @@ document.addEventListener("DOMContentLoaded", function() {
             rotation: -90,
             circumference: 180,
             cutout: '70%',
-            plugins: { legend: { display: false }, tooltip: { enabled: false } }
-        }
+            plugins: { legend: { display: tr }, tooltip: { enabled: false } }
+        },
+        // 3. Register the plugin here
+        plugins: [gaugeTextPlugin]
     });
 });
 
