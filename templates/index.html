@@ -157,12 +157,12 @@ Config</a></li>
             
 
             loader.style.display = 'block';
-            errorDiv.classList.add('d-none');
+            errorDiv.style.display = 'block';
 
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
 
-            try {
+            try {   
                 // FIX: Use 'upload' (relative) instead of '/upload' (absolute)
                 const response = await fetch('api', {
                     method: 'POST',
