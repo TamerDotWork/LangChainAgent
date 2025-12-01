@@ -242,7 +242,7 @@ def api():
         score = 100 * (1 - total_penalty)
         score = max(0, min(100, score))  # ensure between 0-100
     
-        
+        total_cells = int(df.shape[1]) * int(df.shape[0])
         return jsonify({
             "quality_score": int(round(score, 0)),
             "dataset_name": file.filename,
@@ -252,7 +252,7 @@ def api():
             "most_frequent_dtype": most_frequent_dtype,
             "preview": df.head(5).to_dict(orient='records'),
 
-            "missing_count": ( int(missing_count ) / ( int(df.shape[1]) * int(df.shape[0]) ) * 100 ),  # as percentage of total cells),
+            "missing_count": ( int(missing_count ) / total_cells )  * 100,  # as percentage of total cells),
             "duplicate_count": int(duplicate_count),
             "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
             "pii_fields": pii_fields,
