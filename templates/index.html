@@ -125,8 +125,11 @@ Config</a></li>
             
         </main>
         <div id="loading-overlay" style="display:none; ">
+            <div id="errorIcon"  ><img src="static/danger.svg" alt=""></div>
             <img src="static/preloader.gif" alt="">
+            
             <div id="errorMsg"  ></div>
+            
         </div>
     </div>
 
@@ -153,6 +156,7 @@ Config</a></li>
             const fileInput = document.getElementById('auto-csv-file');
             const errorDiv = document.getElementById('errorMsg');
             const loader = document.getElementById('loading-overlay');
+            const errorIcon = document.getElementById('errorIcon');
 
             
 
@@ -191,7 +195,8 @@ Config</a></li>
                 window.location.href = "explore"; // Relative redirect
 
             } catch (err) {
-              
+                errorIcon.style.display = 'block';
+                loader.style.display = 'none';
                 errorDiv.textContent = err.message;
                 errorDiv.style.display = 'block';
             }
