@@ -191,9 +191,9 @@ Config</a></li>
                 window.location.href = "explore"; // Relative redirect
 
             } catch (err) {
-                loader.style.display = 'none';
+              
                 errorDiv.textContent = err.message;
-                errorDiv.classList.remove('d-none');
+                errorDiv.style.display = 'block';
             }
     });
 
