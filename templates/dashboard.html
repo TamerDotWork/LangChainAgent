@@ -411,19 +411,19 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.preview.length > 0) {
                 const headers = Object.keys(data.preview[0]);
                 // 2. Create the Table Header (<thead>)
-                let headerRow = '<thead><tr>';
+                let headerRow = '<thead><tr><tr>';
                 headers.forEach(function(header) {
                     // Normalize header text for better readability
                     let displayHeader = header.replace(/([A-Z])/g, ' $1').trim();
-                    headerRow += `<th>${displayHeader}</th>`;
+                    headerRow += `<th>N</th><th>${displayHeader}</th>`;
                 });
                 headerRow += '</tr></thead>';
                 $table.append(headerRow);
 
                 // 3. Create the Table Body (<tbody>) and populate rows
                 let tableBody = '<tbody>';
-                data.preview.forEach(function(rowData) {
-                    let row = '<tr>';
+                data.preview.forEach(function(rowData, index) {
+                    let row = `<tr><td>${index + 1}</td>`;
                     // Iterate over values in the correct column order
                     headers.forEach(function(key) {
                         let value = rowData[key];
