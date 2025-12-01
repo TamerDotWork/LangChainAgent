@@ -246,6 +246,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#dataset_name").html(data.dataset_name);
     $("#outlier-val").html(data.outliers.length > 0 ? data.outliers.length : 0);
     $("#pair-val").html(data.correlation.length > 0 ? data.correlation.length : 0);
+    $("#normalization-val").html(data.normalization_issues.length > 0 ? data.normalization_issues.length : 0);
  
     $("#pii-val").html(data.pii_fields.length > 0 ? data.pii_fields.length : 0);
     $("#invalid-val").html(Object.values(data.invalid_fields).reduce((a, b) => a + b, 0));
