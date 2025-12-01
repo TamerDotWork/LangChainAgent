@@ -15,7 +15,7 @@ from flask import Flask, render_template, request, jsonify,url_for
 # ------------------------
 # Flask Application
 # ------------------------
-app = Flask(__name__, url_prefix='/LangChainAgent')
+app = Flask(__name__)
 # Route 2: The Dashboard Page (Frontend will redirect here)
 @app.route('/config', methods=['GET'])
 def config():
