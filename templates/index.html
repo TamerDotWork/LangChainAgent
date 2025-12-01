@@ -162,6 +162,7 @@ Upload dataset</button>
             const errorContainer = document.getElementById('errorContainer');
             const loader = document.getElementById('loading-overlay');
             const errorIcon = document.getElementById('errorIcon');
+            const preloaderIcon = document.getElementById('preloader');
 
             
 
@@ -169,7 +170,7 @@ Upload dataset</button>
             errorDiv.style.display = 'none';
             errorContainer.style.display = 'none';
             errorIcon.style.display = 'none';
-
+            preloaderIcon.style.display = 'block';
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
 
@@ -207,6 +208,7 @@ Upload dataset</button>
                 errorDiv.textContent = err.message;
                 errorDiv.style.display = 'block';
                 errorContainer.style.display = 'block';
+                preloaderIcon.style.display = 'none';
             }
     });
 
