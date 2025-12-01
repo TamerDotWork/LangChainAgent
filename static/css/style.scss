@@ -1022,3 +1022,16 @@ canvas {
     border-collapse: collapse;
 
 }
+div#errorMsg {
+    display: block;
+    width: 50%;
+    background: #cb8c8c;
+    padding: 16px;
+    color: #333;
+    border-radius: 6px;
+    margin: auto;
+    position: fixed;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+}
