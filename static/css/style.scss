@@ -1038,8 +1038,8 @@ div#errorContainer{
 }
 div#errorIcon {
     display: block;
-    width: 128px;
-    height: 128px;
+    width: 92px;
+    height: 92px;
     padding: 16px;
     color: #333;
     border-radius: 50%;
@@ -1052,4 +1052,7 @@ div#errorIcon {
     display: flex;
     flex-grow: 1;
     justify-content: center;
+}
+    div#loading-overlay img {
+    width: 128px;
 }
