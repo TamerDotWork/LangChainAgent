@@ -879,10 +879,10 @@ height: 100%;
   background-color: #555; /* Color of the thumb on hover */
 }
 .preview{
-      scrollbar-width: thin; /* 'auto', 'thin', or 'none' */
-  scrollbar-color: #888 #f1f1f1;  overflow: auto; /* Shows scrollbars only when content overflows */
-  /* or */
-  overflow: scroll; /* Always shows scrollbars, even if content fits */
+    scrollbar-width: thin;
+    scrollbar-color: #121212 #333333;
+ overflow: auto;
+ 
 }
 .card{
 
