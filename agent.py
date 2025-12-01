@@ -252,7 +252,8 @@ def api():
             "most_frequent_dtype": most_frequent_dtype,
             "preview": df.head(5).to_dict(orient='records'),
 
-            "missing_count": ( int(missing_count ) / total_cells )  * 100,  # as percentage of total cells),
+            "missing_score": ( int(missing_count ) / total_cells )  * 100,  # as percentage of total cells),
+            "missing_count": int(missing_count ) ,  # as percentage of total cells),
             "duplicate_count": int(duplicate_count),
             "invalid_fields": {str(k): int(v) for k, v in invalid_fields.items()},
             "pii_fields": pii_fields,
