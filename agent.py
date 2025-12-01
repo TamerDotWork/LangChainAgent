@@ -16,6 +16,10 @@ from flask import Flask, render_template, request, jsonify
 # Flask Application
 # ------------------------
 app = Flask(__name__)
+# Route 2: The Dashboard Page (Frontend will redirect here)
+@app.route('/config', methods=['GET'])
+def config():
+    return render_template('config.html')
 
 # Route 1: The Upload Page
 @app.route('/', methods=['GET'])
