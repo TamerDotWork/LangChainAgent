@@ -27,9 +27,9 @@ def index():
     return render_template('index.html')
 
 # Route 2: The Dashboard Page (Frontend will redirect here)
-@app.route('/dashboard', methods=['GET'])
-def dashboard():
-    return render_template('dashboard.html')
+@app.route('/explore', methods=['GET'])
+def explore():
+    return render_template('explore.html')
 
 # Route 3: The API to Process the file
 @app.route('/api', methods=['POST'])
