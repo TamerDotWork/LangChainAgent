@@ -880,7 +880,9 @@ height: 100%;
 }
 .preview{
       scrollbar-width: thin; /* 'auto', 'thin', or 'none' */
-  scrollbar-color: #888 #f1f1f1; /* thumb-color track-color */
+  scrollbar-color: #888 #f1f1f1;  overflow: auto; /* Shows scrollbars only when content overflows */
+  /* or */
+  overflow: scroll; /* Always shows scrollbars, even if content fits */
 }
 .card{
 
