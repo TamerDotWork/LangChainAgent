@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     $("#most_frequent_type").html(data.quality_score);
     $("#most_frequent_type").html(data.most_frequent_dtype);
-    $("#missing-val").html(data.missing_count/data.missing_count);
+    $("#missing-val").html(data.missing_count);
     $("#duplicates-val").html(data.duplicate_count);
     $("#row_count").html(data.row_count);
     $("#column_count").html(data.column_count); 
@@ -340,7 +340,7 @@ document.addEventListener("DOMContentLoaded", function() {
         data: {
             labels: ['Score', 'Empty'],
             datasets: [{
-                data: [data.missing_count, 100 - data.missing_count],
+                data: [data.missing_score, 100 - data.missing_score],
                 // 3. Assign the gradient variable here
                 backgroundColor: [missingChartgradient, '#333333'], 
                 borderWidth: 0,
