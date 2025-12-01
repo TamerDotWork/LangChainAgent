@@ -411,11 +411,11 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.preview.length > 0) {
                 const headers = Object.keys(data.preview[0]);
                 // 2. Create the Table Header (<thead>)
-                let headerRow = '<thead><tr><tr>';
+                let headerRow = '<thead><tr><tr><th>N</th>';
                 headers.forEach(function(header) {
                     // Normalize header text for better readability
                     let displayHeader = header.replace(/([A-Z])/g, ' $1').trim();
-                    headerRow += `<th>N</th><th>${displayHeader}</th>`;
+                    headerRow += `<th>${displayHeader}</th>`;
                 });
                 headerRow += '</tr></thead>';
                 $table.append(headerRow);
