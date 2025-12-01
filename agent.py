@@ -15,7 +15,7 @@ from flask import Flask, render_template, request, jsonify,url_for
 # ------------------------
 # Flask Application
 # ------------------------
-app = Flask(__name__)
+app = Flask(__name__, url_prefix='/LangChainAgent')
 # Route 2: The Dashboard Page (Frontend will redirect here)
 @app.route('/config', methods=['GET'])
 def config():
@@ -170,4 +170,4 @@ def api():
     
     
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5006, debug=True,url_prefix='/LangChainAgent')
+    app.run(host='0.0.0.0', port=5006, debug=True)
