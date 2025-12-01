@@ -787,6 +787,13 @@ header .row {
 }
 h6 {
     margin-bottom: 0;
+    font-size: 1.2rem;
+    font-weight: 200;
+    background: linear-gradient(to top, #878787, #666);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0);
+    color: rgba(0, 0, 0, 0);
 }
 .wrapper .col8 {
     margin-bottom: 0px;
