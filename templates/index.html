@@ -158,6 +158,7 @@ Config</a></li>
 
             const fileInput = document.getElementById('auto-csv-file');
             const errorDiv = document.getElementById('errorMsg');
+            const errorContainer = document.getElementById('errorContainer');
             const loader = document.getElementById('loading-overlay');
             const errorIcon = document.getElementById('errorIcon');
 
@@ -202,6 +203,7 @@ Config</a></li>
                 loader.style.display = 'block';
                 errorDiv.textContent = err.message;
                 errorDiv.style.display = 'block';
+                errorContainer.style.display = 'block';
             }
     });
 
