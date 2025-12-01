@@ -182,14 +182,7 @@ hr {
     width: 90%;
 }
 
-#preloader {
-    display: none;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1001;
-}
+
 
 #overlay {
     display: none;
@@ -1053,9 +1046,17 @@ div#errorIcon {
     flex-grow: 1;
     justify-content: center;
 }
-#preloader{
-    width: 56px;
-}
+ 
 #danger{
     width: 128px;
+}
+
+#preloader {
+ 
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+       width: 56px;
 }
