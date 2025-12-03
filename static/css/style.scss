@@ -131,7 +131,10 @@ ul {
     width: 68%;
 }
 .hero{
-    padding: 1rem;
+    padding: 1rem;    width: 40%;
+}
+form#auto-upload-form {
+     width: 60%;  
 }
 .cta h1 {
     // font-family: "Fraunces", serif;
@@ -243,7 +246,7 @@ margin-right: 16px;
 }
 input[type="file"] {}
 img.img-responsive {
-    width: 100%;
+    width: 420px;
     height: auto;
 }
 .modal {
