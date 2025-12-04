@@ -267,5 +267,5 @@ def api():
         return jsonify({"error": f"Processing failed: {str(e)}"}), 500
     
     
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=5006, debug=False, use_reloader=False)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5006, debug=False, use_reloader=False)
